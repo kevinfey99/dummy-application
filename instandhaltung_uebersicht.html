@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Wartungsübersicht</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button class="theme-toggle" aria-label="Toggle theme">☀️</button>
+  <div class="container">
+    <div class="card">
+      <h1>Wartungsübersicht</h1>
+      <p>Aktuelle Wartungsarbeiten auf einen Blick.</p>
+      <table class="table">
+        <thead>
+          <tr><th>Anlage</th><th>Wartungsdatum</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-click="Maschine 1">Maschine 1</td><td data-click="14.08.2025">14.08.2025</td><td data-click="geplant">geplant</td></tr><tr><td data-click="Maschine 2">Maschine 2</td><td data-click="10.08.2025">10.08.2025</td><td data-click="abgeschlossen">abgeschlossen</td></tr><tr><td data-click="Maschine 3">Maschine 3</td><td data-click="18.08.2025">18.08.2025</td><td data-click="in Bearbeitung">in Bearbeitung</td></tr>
+        </tbody>
+      </table>
+      <p><a class="btn" href="instandhaltung_planung.html">Wartungsplanung</a>
+            <a class="btn" href="instandhaltung_meldungen.html">Störungsmeldungen</a></p>
+      <div class="card-footer">Dummy-Seite – erstellt am 11. August 2025</div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

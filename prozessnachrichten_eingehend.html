@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Eingehende Nachrichten</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button class="theme-toggle" aria-label="Toggle theme">☀️</button>
+  <div class="container">
+    <div class="card">
+      <h1>Eingehende Nachrichten</h1>
+      <p>Liste der zuletzt eingegangenen Prozessnachrichten.</p>
+      <table class="table">
+        <thead>
+          <tr><th>Zeitpunkt</th><th>Absender</th><th>Betreff</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-click="11:30">11:30</td><td data-click="System A">System A</td><td data-click="Statusbericht">Statusbericht</td></tr><tr><td data-click="10:15">10:15</td><td data-click="System B">System B</td><td data-click="Fehlermeldung">Fehlermeldung</td></tr><tr><td data-click="09:50">09:50</td><td data-click="System C">System C</td><td data-click="Auftragsupdate">Auftragsupdate</td></tr>
+        </tbody>
+      </table>
+      <p><a class="btn" href="prozessnachrichten_ausgehend.html">Ausgehende Nachrichten</a>
+            <a class="btn" href="prozessnachrichten_detail.html">Nachrichtendetails</a></p>
+      <div class="card-footer">Dummy-Seite – erstellt am 11. August 2025</div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
