@@ -1,0 +1,245 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-7DE4C3F8-C7D9-407A-A363-F180C969B73C/overflow_toolbar_footer.html
+Subject: =?utf-8?Q?OverflowToolbar=20Footer=20=E2=80=93=20SAP=20Fiori=20Demo?=
+Date: Tue, 12 Aug 2025 13:58:41 +0200
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--EMV0S1e9KPk9Zithq4rErQsZnaC266QVp8TKPdSZCs----"
+
+
+------MultipartBoundary--EMV0S1e9KPk9Zithq4rErQsZnaC266QVp8TKPdSZCs----
+Content-Type: text/html
+Content-ID: <frame-159D4773397B0EF6C8555B1D335C136A@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-7DE4C3F8-C7D9-407A-A363-F180C969B73C/overflow_toolbar_footer.html
+
+<!DOCTYPE html><html lang=3D"de" data-theme=3D"light"><head><meta http-equi=
+v=3D"Content-Type" content=3D"text/html; charset=3DUTF-8"><link rel=3D"styl=
+esheet" type=3D"text/css" href=3D"cid:css-6ae7b4a8-51e8-4b0c-a296-8a4a0bae3=
+7ca@mhtml.blink" />
+ =20
+  <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D=
+1">
+  <title>OverflowToolbar Footer =E2=80=93 SAP Fiori Demo</title>
+  <!--
+    Nachbau des SAPUI5=E2=80=91Beispiels =E2=80=9EOverflow Toolbar mit Foot=
+er=E2=80=9C. =20
+    Diese Datei verwendet die propriet=C3=A4re SAP=E2=80=91Schrift =E2=80=
+=9E72=E2=80=9C und die SAP=E2=80=91Icon=E2=80=91Font
+    (siehe Fiori Design System Downloads=E3=80=90200140791909796=E2=80=A0L6=
+0-L66=E3=80=91) sowie=20
+    farbliche Akzente gem=C3=A4=C3=9F der SAP Horizon Theme Blaupalette. =
+=20
+    Ein Schieberegler oben steuert die verf=C3=BCgbare Breite der Toolbars,=
+ um das
+    Overflow-Verhalten zu testen. =20
+  -->
+ =20
+</head>
+<body>
+  <div class=3D"note">
+    Verwende diesen Schieberegler, um die Toolbars zu verkleinern und ihr O=
+verflow-Verhalten zu beobachten. Die Icon=E2=80=91Buttons zeigen nur dann T=
+ext, wenn sie im Overflow erscheinen.
+  </div>
+  <div class=3D"slider-container">
+    <input type=3D"range" id=3D"toolbarSlider" min=3D"40" max=3D"100" value=
+=3D"100">
+  </div>
+  <!-- Obere Toolbar -->
+  <div class=3D"toolbar" id=3D"topToolbar">
+    <div class=3D"search-box">
+      <input type=3D"search" placeholder=3D"Search">
+      <span class=3D"icon">=EE=80=8D</span>
+    </div>
+    <button class=3D"btn btn-reset">Reset</button>
+    <span class=3D"icon" title=3D"Sortierung aufsteigend">=EE=82=95</span>
+    <span class=3D"icon" title=3D"Filter">=EE=81=B6</span>
+    <span class=3D"icon" title=3D"Weitere Aktionen">=EE=81=8E</span>
+  </div>
+  <!-- Tabelle mit Produkten -->
+  <div class=3D"table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Supplier</th>
+          <th>Dimensions</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody id=3D"tableBody"><tr><td><span class=3D"product">Notebook Basi=
+c 15</span><br><span class=3D"product-code">HT-1000</span></td><td>Very Bes=
+t Screens</td><td>30 x 18 x 3 cm</td><td style=3D"text-align: right;">956.0=
+0 EUR</td></tr><tr><td><span class=3D"product">Notebook Basic 17</span><br>=
+<span class=3D"product-code">HT-1001</span></td><td>Very Best Screens</td><=
+td>29 x 17 x 3.1 cm</td><td style=3D"text-align: right;">1,249.00 EUR</td><=
+/tr><tr><td><span class=3D"product">Notebook Basic 18</span><br><span class=
+=3D"product-code">HT-1002</span></td><td>Very Best Screens</td><td>28 x 19 =
+x 2.5 cm</td><td style=3D"text-align: right;">1,570.00 EUR</td></tr><tr><td=
+><span class=3D"product">Notebook Basic 19</span><br><span class=3D"product=
+-code">HT-1003</span></td><td>Smartcards</td><td>32 x 21 x 4 cm</td><td sty=
+le=3D"text-align: right;">1,650.00 EUR</td></tr><tr><td><span class=3D"prod=
+uct">ITElO Vault</span><br><span class=3D"product-code">HT-1007</span></td>=
+<td>Technocom</td><td>32 x 22 x 3 cm</td><td style=3D"text-align: right;">2=
+99.00 EUR</td></tr><tr><td><span class=3D"product">Notebook Professional 15=
+</span><br><span class=3D"product-code">HT-1010</span></td><td>Very Best Sc=
+reens</td><td>33 x 20 x 3 cm</td><td style=3D"text-align: right;">1,999.00 =
+EUR</td></tr><tr><td><span class=3D"product">Notebook Professional 17</span=
+><br><span class=3D"product-code">HT-1011</span></td><td>Very Best Screens<=
+/td><td>33 x 23 x 2 cm</td><td style=3D"text-align: right;">2,299.00 EUR</t=
+d></tr><tr><td><span class=3D"product">ITElO Vault Net</span><br><span clas=
+s=3D"product-code">HT-1020</span></td><td>Technocom</td><td>41 x 41 x 28 cm=
+</td><td style=3D"text-align: right;">139.00 EUR</td></tr><tr><td><span cla=
+ss=3D"product">ITElO Vault SAT</span><br><span class=3D"product-code">HT-10=
+21</span></td><td>Technocom</td><td>46 x 32 x 25 cm</td><td style=3D"text-a=
+lign: right;">99.00 EUR</td></tr><tr><td><span class=3D"product">Comfort Ea=
+sy</span><br><span class=3D"product-code">HT-1022</span></td><td>Technocom<=
+/td><td>84 x 1.5 x 14 cm</td><td style=3D"text-align: right;">1,679.00 EUR<=
+/td></tr><tr><td><span class=3D"product">Comfort Senior</span><br><span cla=
+ss=3D"product-code">HT-1023</span></td><td>Technocom</td><td>80 x 1.6 x 13 =
+cm</td><td style=3D"text-align: right;">512.00 EUR</td></tr><tr><td><span c=
+lass=3D"product">Ergo Screen E-I</span><br><span class=3D"product-code">HT-=
+1030</span></td><td>Very Best Screens</td><td>37 x 12 x 36 cm</td><td style=
+=3D"text-align: right;">230.00 EUR</td></tr><tr><td><span class=3D"product"=
+>Ergo Screen E-II</span><br><span class=3D"product-code">HT-1031</span></td=
+><td>Very Best Screens</td><td>40.8 x 19 x 43 cm</td><td style=3D"text-alig=
+n: right;">285.00 EUR</td></tr><tr><td><span class=3D"product">Ergo Screen =
+E-III</span><br><span class=3D"product-code">HT-1032</span></td><td>Very Be=
+st Screens</td><td>40.8 x 19 x 43 cm</td><td style=3D"text-align: right;">3=
+45.00 EUR</td></tr><tr><td><span class=3D"product">Flat Basic</span><br><sp=
+an class=3D"product-code">HT-1035</span></td><td>Very Best Screens</td><td>=
+39 x 20 x 41 cm</td><td style=3D"text-align: right;">399.00 EUR</td></tr><t=
+r><td><span class=3D"product">Flat Future</span><br><span class=3D"product-=
+code">HT-1036</span></td><td>Very Best Screens</td><td>45 x 26 x 46 cm</td>=
+<td style=3D"text-align: right;">430.00 EUR</td></tr><tr><td><span class=3D=
+"product">Flat XL</span><br><span class=3D"product-code">HT-1037</span></td=
+><td>Very Best Screens</td><td>54.5 x 22.1 x 39.1 cm</td><td style=3D"text-=
+align: right;">1,230.00 EUR</td></tr><tr><td><span class=3D"product">Laser =
+Professional Eco</span><br><span class=3D"product-code">HT-1040</span></td>=
+<td>Alpha Printers</td><td>51 x 46 x 30 cm</td><td style=3D"text-align: rig=
+ht;">830.00 EUR</td></tr><tr><td><span class=3D"product">Laser Basic</span>=
+<br><span class=3D"product-code">HT-1041</span></td><td>Alpha Printers</td>=
+<td>48 x 42 x 26 cm</td><td style=3D"text-align: right;">490.00 EUR</td></t=
+r><tr><td><span class=3D"product">Laser Allround</span><br><span class=3D"p=
+roduct-code">HT-1042</span></td><td>Alpha Printers</td><td>53 x 50 x 65 cm<=
+/td><td style=3D"text-align: right;">349.00 EUR</td></tr></tbody>
+    </table>
+  </div>
+  <!-- Fu=C3=9Fzeile -->
+  <div class=3D"toolbar footer" id=3D"footerToolbar">
+    <button class=3D"btn btn-accept">Accept</button>
+    <button class=3D"btn btn-reject">Reject</button>
+    <div class=3D"footer-right">
+      <span class=3D"icon" title=3D"Edit">=EE=80=B8</span>
+      <span class=3D"icon" title=3D"Add">=EE=81=98</span>
+      <span class=3D"icon" title=3D"Favorite">=EE=81=A5</span>
+      <span class=3D"icon" title=3D"Sort">=EE=82=95</span>
+    </div>
+  </div>
+
+ =20
+
+</body></html>
+------MultipartBoundary--EMV0S1e9KPk9Zithq4rErQsZnaC266QVp8TKPdSZCs----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-6ae7b4a8-51e8-4b0c-a296-8a4a0bae37ca@mhtml.blink
+
+@charset "utf-8";
+
+@font-face { font-family: "72"; src: url("https://ui5.sap.com/resources/sap=
+/ui/core/themes/base/fonts/72-Regular.woff2") format("woff2"); font-weight:=
+ normal; }
+
+@font-face { font-family: "72"; src: url("https://ui5.sap.com/resources/sap=
+/ui/core/themes/base/fonts/72-Bold.woff2") format("woff2"); font-weight: bo=
+ld; }
+
+@font-face { font-family: SAP-icons; src: url("https://ui5.sap.com/resource=
+s/sap/ui/core/themes/base/fonts/SAP-icons.woff2") format("woff2"); }
+
+:root { --toolbar-perc: 100; --bg: #f5f7fb; --surface: #ffffff; --text-prim=
+ary: #0f172a; --text-secondary: #475569; --border: rgba(15,23,42,0.15); --a=
+ccent: #0a6ed1; --accent-hover: #0854a0; --positive: #107e3e; --negative: #=
+c91f1f; }
+
+html[data-theme=3D"dark"] { --bg: #0b1220; --surface: #0f172a; --text-prima=
+ry: #f1f5f9; --text-secondary: #94a3b8; --border: rgba(148,163,184,0.25); -=
+-accent: #5fa4ea; --accent-hover: #3b82f6; --positive: #34d399; --negative:=
+ #f87171; }
+
+body { margin: 0px; font-family: "72", sans-serif; background: var(--bg); c=
+olor: var(--text-primary); }
+
+.note { padding: 8px 16px; font-size: 12px; color: var(--text-secondary); b=
+ackground: var(--surface); border-bottom: 1px solid var(--border); }
+
+.slider-container { padding: 8px 16px; background: var(--surface); border-b=
+ottom: 1px solid var(--border); }
+
+input[type=3D"range"] { width: 100%; }
+
+.toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 16px;=
+ background: var(--surface); border-bottom: 1px solid var(--border); width:=
+ calc(var(--toolbar-perc) * 1%); overflow: hidden; transition: width 0.2s; =
+}
+
+.toolbar.footer { position: sticky; bottom: 0px; border-top: 1px solid var(=
+--border); border-bottom: none; z-index: 5; }
+
+.search-box { position: relative; flex: 1 1 auto; }
+
+.search-box input { width: 100%; padding: 6px 30px 6px 8px; border-radius: =
+4px; border: 1px solid var(--border); background: var(--bg); color: var(--t=
+ext-primary); }
+
+.search-box .icon { position: absolute; right: 8px; top: 50%; transform: tr=
+anslateY(-50%); font-size: 14px; pointer-events: none; color: var(--text-se=
+condary); }
+
+.icon { font-family: SAP-icons; font-style: normal; font-size: 18px; line-h=
+eight: 1; cursor: pointer; padding: 4px; border-radius: 4px; }
+
+.icon:hover { background: var(--bg); }
+
+.btn { border: none; border-radius: 4px; padding: 6px 12px; font-family: "7=
+2", sans-serif; font-size: 14px; cursor: pointer; display: inline-flex; ali=
+gn-items: center; justify-content: center; gap: 4px; }
+
+.btn-reset { background: var(--accent); color: rgb(255, 255, 255); }
+
+.btn-reset:hover { background: var(--accent-hover); }
+
+.btn-accept { background: var(--positive); color: rgb(255, 255, 255); }
+
+.btn-accept:hover { filter: brightness(0.9); }
+
+.btn-reject { background: var(--negative); color: rgb(255, 255, 255); }
+
+.btn-reject:hover { filter: brightness(0.9); }
+
+.table-wrapper { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-al=
+ign: left; font-size: 14px; }
+
+th { font-weight: bold; background: var(--surface); position: sticky; top: =
+0px; z-index: 2; }
+
+tr:hover td { background: rgba(0, 0, 0, 0.02); }
+
+.product { color: var(--accent); font-weight: 600; }
+
+.product-code { font-size: 12px; color: var(--text-secondary); }
+
+.footer-right { margin-left: auto; display: flex; gap: 8px; }
+
+@media (max-width: 840px) {
+  .toolbar { flex-wrap: wrap; }
+  .footer-right { margin-left: 0px; }
+}
+------MultipartBoundary--EMV0S1e9KPk9Zithq4rErQsZnaC266QVp8TKPdSZCs------
