@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<!-- saved from url=(0143)file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html -->
+<html lang="de" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Production Orders – Fiori Demo</title>
+  <style>
+    /* ------------------------------------------------------------------
+       Font loading
+       
+       We load the SAP 72 font family and SAP Icons via @font-face from the
+       public UI5 CDN. The 72 family covers weights Regular and Bold, which
+       are sufficient for most UI scenarios. The SAP Icons font contains
+       pictograms referenced in the markup below.  
+
+       See SAP’s documentation for details on downloading and installing
+       these fonts【200140791909796†L60-L66】【200140791909796†L92-L110】.
+    ------------------------------------------------------------------ */
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'SAP-icons';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/SAP-icons.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ------------------------------------------------------------------
+       Theme variables
+       
+       Define CSS custom properties to control colours and sizes for both
+       light and dark modes.  Users can toggle dark mode via the gear icon
+       in the header.
+    ------------------------------------------------------------------ */
+    :root {
+      --sapBrandColor: #0a6ed1;           /* primary brand blue */
+      --sapHighlightColor: #80bdff;       /* highlight blue */
+      --sapTextColor: #32363a;            /* dark text */
+      --sapBackgroundColor: #f7f9fa;      /* page background */
+      --sapSurfaceColor: #ffffff;         /* cards and panels */
+      --sapBorderColor: rgba(0,0,0,0.15);
+      --sapDisabledColor: #d3d7d9;
+      --sapListHoverColor: #eff3f7;
+    }
+    html[data-theme="dark"] {
+      --sapBrandColor: #1b81d5;
+      --sapHighlightColor: #699ddb;
+      --sapTextColor: #e9ecf0;
+      --sapBackgroundColor: #0b1220;
+      --sapSurfaceColor: #1a253c;
+      --sapBorderColor: rgba(255,255,255,0.15);
+      --sapDisabledColor: #3c4b67;
+      --sapListHoverColor: #273656;
+    }
+
+    /* ------------------------------------------------------------------
+       Global styles
+    ------------------------------------------------------------------ */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: '72', Arial, sans-serif;
+      background-color: var(--sapBackgroundColor);
+      color: var(--sapTextColor);
+    }
+    a { color: var(--sapBrandColor); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button {
+      font-family: '72', Arial, sans-serif;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+    }
+    .sap-icon {
+      font-family: 'SAP-icons';
+      font-size: 1rem;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    /* ------------------------------------------------------------------
+       Layout containers
+    ------------------------------------------------------------------ */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--sapBorderColor);
+      background-color: var(--sapSurfaceColor);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .header .title {
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+    .header .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .variant-selector {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .variant-selector span.variant {
+      font-weight: 700;
+    }
+    .variant-selector .sap-icon {
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: var(--sapBrandColor);
+    }
+
+    .filter-bar {
+      padding: 16px 24px;
+      background-color: var(--sapSurfaceColor);
+      border-bottom: 1px solid var(--sapBorderColor);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .filter-group label {
+      font-size: 0.75rem;
+      color: var(--sapTextColor);
+      opacity: 0.7;
+    }
+    .filter-group input[type="text"],
+    .filter-group input[type="date"],
+    .filter-group select {
+      padding: 6px 8px;
+      border: 1px solid var(--sapBorderColor);
+      border-radius: 4px;
+      background-color: var(--sapBackgroundColor);
+      color: var(--sapTextColor);
+    }
+    .filter-group input[type="text"]:focus,
+    .filter-group input[type="date"]:focus,
+    .filter-group select:focus {
+      outline: none;
+      border-color: var(--sapBrandColor);
+    }
+    .filter-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .filter-row .search-container {
+      position: relative;
+      flex: 1;
+    }
+    .search-container input {
+      width: 100%;
+      padding: 6px 8px 6px 28px;
+    }
+    .search-container .sap-icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--sapTextColor);
+    }
+    .filter-row .go-button {
+      padding: 6px 16px;
+      background-color: var(--sapBrandColor);
+      color: #fff;
+      border-radius: 4px;
+      transition: background-color 0.15s;
+    }
+    .filter-row .go-button:hover {
+      background-color: #0b66c3;
+    }
+
+    .message-bar {
+      background-color: #fdf6e3;
+      border-bottom: 1px solid #f2e6c9;
+      padding: 12px 24px;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #926b20;
+    }
+    .message-bar .sap-icon {
+      color: #926b20;
+    }
+
+    .content {
+      padding: 16px 24px 64px;
+    }
+    .table-container {
+      overflow-x: auto;
+      background-color: var(--sapSurfaceColor);
+      border: 1px solid var(--sapBorderColor);
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    thead th {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--sapBorderColor);
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--sapBorderColor);
+      transition: background-color 0.1s;
+    }
+    tbody tr:hover {
+      background-color: var(--sapListHoverColor);
+    }
+    tbody td {
+      padding: 6px 12px;
+      vertical-align: top;
+    }
+    tbody td:nth-child(1), tbody td:nth-child(2) {
+      white-space: nowrap;
+    }
+    .action-button {
+      padding: 4px 8px;
+      background-color: var(--sapBrandColor);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 24px;
+      background-color: var(--sapSurfaceColor);
+      border-top: 1px solid var(--sapBorderColor);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .bottom-bar button {
+      padding: 8px 16px;
+      font-weight: 700;
+      min-width: 100px;
+    }
+    .save-button {
+      background-color: var(--sapBrandColor);
+      color: #fff;
+    }
+    .cancel-button {
+      background-color: transparent;
+      color: var(--sapBrandColor);
+      border: 1px solid var(--sapBrandColor);
+    }
+    .gear-button {
+      background-color: transparent;
+      border: none;
+      color: var(--sapBrandColor);
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: background-color 0.15s;
+    }
+    .gear-button:hover {
+      background-color: var(--sapListHoverColor);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header with variant selector and theme toggle -->
+  <header class="header">
+    <div class="variant-selector">
+      <span class="variant">Standard*</span>
+      <span class="sap-icon"></span> <!-- down arrow icon -->
+    </div>
+    <div class="actions">
+      <button class="gear-button" id="themeToggle" title="Theme umschalten">
+        <span class="sap-icon"></span> <!-- settings/gear icon -->
+      </button>
+    </div>
+  </header>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="filter-row" style="grid-column: 1 / -1;">
+      <div class="search-container">
+        <span class="sap-icon"></span>
+        <input type="text" id="searchInput" placeholder="Search" aria-label="Search">
+      </div>
+      <!-- date range filter -->
+      <div class="filter-group">
+        <label for="fromDate">Horizon: von</label>
+        <input type="date" id="fromDate" value="2025-01-01">
+      </div>
+      <div class="filter-group">
+        <label for="toDate">bis</label>
+        <input type="date" id="toDate" value="2025-12-31">
+      </div>
+      <button class="go-button" id="filterButton">Go</button>
+    </div>
+    <!-- second row of filters -->
+    <div class="filter-group">
+      <label for="workCenter">Work Center</label>
+      <select id="workCenter">
+        <option value="">All</option>
+        <option>TURNING2</option>
+        <option>ASSEMBLY</option>
+        <option>PACKAGING</option>
+        <option>QUALITY</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="productFilter">Product</label>
+      <select id="productFilter">
+        <option value="">All</option>
+        <option value="SG1_CP">SG1_CP</option>
+        <option value="FG1_CP">FG1_CP</option>
+        <option value="CH2_CP">CH2_CP</option>
+        <option value="PR1_CP">PR1_CP</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="statusFilter">Status</label>
+      <select id="statusFilter">
+        <option value="">All</option>
+        <option value="Not Dispatched">Not Dispatched</option>
+        <option value="Dispatched">Dispatched</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Simulation mode message -->
+  <div class="message-bar">
+    <span class="sap-icon"></span> <!-- hint icon -->
+    <span>Diese App arbeitet im Simulationsmodus. Um Änderungen zu speichern, wählen Sie „Save“.</span>
+  </div>
+
+  <!-- Main content area -->
+  <main class="content">
+    <h2 style="margin: 0 0 8px 0; font-weight: 700;">Orders (<span id="orderCount">12</span>)</h2>
+    <div class="table-container">
+      <table id="ordersTable">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Source of Supply</th>
+            <th>Requirement Date</th>
+            <th>Receipt Date</th>
+            <th>Work Center</th>
+            <th>Operation</th>
+            <th>Action</th>
+            <th>Operation Start</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Planned Order">4000002037</a><br>
+              <small>Planned Order</small><br>
+              <small>Capacity Required: 13.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">SG1_CP</a><br>
+              <small>SG1_CP, Shaft</small>
+            </td>
+            <td>75 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-01-29</td>
+            <td>2025-02-19</td>
+            <td>TURNING2</td>
+            <td>0020</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-11 15:09:24</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Planned Order">20356</a><br>
+              <small>Planned Order</small><br>
+              <small>Capacity Required: 4.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">FG1_CP</a><br>
+              <small>FG1_CP, Shaft with Rolling Bearings</small>
+            </td>
+            <td>75 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-05-10</td>
+            <td>2025-09-22</td>
+            <td>ASSPKG</td>
+            <td>0010</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-12 08:24:24</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Production Order">1003981</a><br>
+              <small>Production Order</small><br>
+              <small>Capacity Required: 75.67 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">SG1_CP</a><br>
+              <small>SG1_CP, Shaft</small>
+            </td>
+            <td>451 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-01-29</td>
+            <td>2025-03-22</td>
+            <td>TURNING2</td>
+            <td>0020</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-12 11:07:30</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Production Order">1003980</a><br>
+              <small>Production Order</small><br>
+              <small>Capacity Required: 0.50 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">FG1_CP</a><br>
+              <small>FG1_CP, Shaft with Rolling Bearings</small>
+            </td>
+            <td>5 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-05-17</td>
+            <td>2025-05-17</td>
+            <td>ASSPKG</td>
+            <td>0010</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-18 14:58:09</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Planned Order">20357</a><br>
+              <small>Planned Order</small><br>
+              <small>Capacity Required: 4.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">FG1_CP</a><br>
+              <small>FG1_CP</small>
+            </td>
+            <td>75 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-05-10</td>
+            <td>2025-09-22</td>
+            <td>ASSPKG</td>
+            <td>0010</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-12 08:24:24</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Production Order">1003982</a><br>
+              <small>Production Order</small><br>
+              <small>Capacity Required: 50.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">SG1_CP</a><br>
+              <small>SG1_CP, Shaft</small>
+            </td>
+            <td>300 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-04-01</td>
+            <td>2025-05-01</td>
+            <td>TURNING2</td>
+            <td>0020</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-04-02 07:20:00</td>
+            <td>Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Planned Order">4000002038</a><br>
+              <small>Planned Order</small><br>
+              <small>Capacity Required: 20.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">CH2_CP</a><br>
+              <small>CH2_CP, Chain</small>
+            </td>
+            <td>120 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-02-05</td>
+            <td>2025-03-10</td>
+            <td>QUALITY</td>
+            <td>0050</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-28 09:45:00</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Production Order">3005001</a><br>
+              <small>Production Order</small><br>
+              <small>Capacity Required: 30.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">PR1_CP</a><br>
+              <small>PR1_CP, Press Housing</small>
+            </td>
+            <td>200 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-03-01</td>
+            <td>2025-03-20</td>
+            <td>ASSEMBLY</td>
+            <td>0030</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-03-02 10:15:30</td>
+            <td>In Progress</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Production Order">3005002</a><br>
+              <small>Production Order</small><br>
+              <small>Capacity Required: 28.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">PR1_CP</a><br>
+              <small>PR1_CP, Press Housing</small>
+            </td>
+            <td>180 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-04-10</td>
+            <td>2025-04-25</td>
+            <td>ASSEMBLY</td>
+            <td>0030</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-04-12 09:00:00</td>
+            <td>Completed</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Planned Order">20358</a><br>
+              <small>Planned Order</small><br>
+              <small>Capacity Required: 5.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">FG1_CP</a><br>
+              <small>FG1_CP, Shaft with Rolling Bearings</small>
+            </td>
+            <td>85 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-05-20</td>
+            <td>2025-10-01</td>
+            <td>PACKAGING</td>
+            <td>0010</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-13 08:30:00</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Planned Order">4000002040</a><br>
+              <small>Planned Order</small><br>
+              <small>Capacity Required: 25.00 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">CH2_CP</a><br>
+              <small>CH2_CP, Chain</small>
+            </td>
+            <td>200 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-02-15</td>
+            <td>2025-03-25</td>
+            <td>QUALITY</td>
+            <td>0050</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-02-28 09:45:00</td>
+            <td>Not Dispatched</td>
+          </tr><tr>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#" title="Planned Order">20359</a><br>
+              <small>Planned Order</small><br>
+              <small>Capacity Required: 5.50 H</small>
+            </td>
+            <td>
+              <a href="file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-B47FCED5-C341-4ACF-82EC-ECDFA164B0FA/production_orders.html#">FG1_CP</a><br>
+              <small>FG1_CP, Shaft with Rolling Bearings</small>
+            </td>
+            <td>65 PC</td>
+            <td>Production Version (0001)</td>
+            <td>2025-06-10</td>
+            <td>2025-11-01</td>
+            <td>ASSEMBLY</td>
+            <td>0010</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>2025-03-01 10:40:00</td>
+            <td>Not Dispatched</td>
+          </tr></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <button class="cancel-button">Cancel</button>
+    <button class="save-button">Save</button>
+  </div>
+
+  <script>
+    (function() {
+      const orders = [
+        {
+          order: '4000002037', type: 'Planned Order', product: 'SG1_CP', description: 'SG1_CP, Shaft', qty: 75, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-01-29', receiptDate: '2025-02-19', workCenter: 'TURNING2',
+          operation: '0020', action: 'Late', opStart: '2025-02-11T15:09:24', status: 'Not Dispatched', capacity: '13.00 H'
+        },
+        {
+          order: '20356', type: 'Planned Order', product: 'FG1_CP', description: 'FG1_CP, Shaft with Rolling Bearings', qty: 75, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-05-10', receiptDate: '2025-09-22', workCenter: 'ASSPKG',
+          operation: '0010', action: '', opStart: '2025-02-12T08:24:24', status: 'Not Dispatched', capacity: '4.00 H'
+        },
+        {
+          order: '1003981', type: 'Production Order', product: 'SG1_CP', description: 'SG1_CP, Shaft', qty: 451, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-01-29', receiptDate: '2025-03-22', workCenter: 'TURNING2',
+          operation: '0020', action: 'Late', opStart: '2025-02-12T11:07:30', status: 'Not Dispatched', capacity: '75.67 H'
+        },
+        {
+          order: '1003980', type: 'Production Order', product: 'FG1_CP', description: 'FG1_CP, Shaft with Rolling Bearings', qty: 5, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-05-17', receiptDate: '2025-05-17', workCenter: 'ASSPKG',
+          operation: '0010', action: '', opStart: '2025-02-18T14:58:09', status: 'Not Dispatched', capacity: '0.50 H'
+        },
+        {
+          order: '20357', type: 'Planned Order', product: 'FG1_CP', description: 'FG1_CP', qty: 75, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-05-10', receiptDate: '2025-09-22', workCenter: 'ASSPKG',
+          operation: '0010', action: '', opStart: '2025-02-12T08:24:24', status: 'Not Dispatched', capacity: '4.00 H'
+        },
+        {
+          order: '1003982', type: 'Production Order', product: 'SG1_CP', description: 'SG1_CP, Shaft', qty: 300, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-04-01', receiptDate: '2025-05-01', workCenter: 'TURNING2',
+          operation: '0020', action: '', opStart: '2025-04-02T07:20:00', status: 'Dispatched', capacity: '50.00 H'
+        },
+        {
+          order: '4000002038', type: 'Planned Order', product: 'CH2_CP', description: 'CH2_CP, Chain', qty: 120, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-02-05', receiptDate: '2025-03-10', workCenter: 'QUALITY',
+          operation: '0050', action: 'Late', opStart: '2025-02-28T09:45:00', status: 'Not Dispatched', capacity: '20.00 H'
+        },
+        {
+          order: '3005001', type: 'Production Order', product: 'PR1_CP', description: 'PR1_CP, Press Housing', qty: 200, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-03-01', receiptDate: '2025-03-20', workCenter: 'ASSEMBLY',
+          operation: '0030', action: '', opStart: '2025-03-02T10:15:30', status: 'In Progress', capacity: '30.00 H'
+        },
+        {
+          order: '3005002', type: 'Production Order', product: 'PR1_CP', description: 'PR1_CP, Press Housing', qty: 180, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-04-10', receiptDate: '2025-04-25', workCenter: 'ASSEMBLY',
+          operation: '0030', action: '', opStart: '2025-04-12T09:00:00', status: 'Completed', capacity: '28.00 H'
+        },
+        {
+          order: '20358', type: 'Planned Order', product: 'FG1_CP', description: 'FG1_CP, Shaft with Rolling Bearings', qty: 85, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-05-20', receiptDate: '2025-10-01', workCenter: 'PACKAGING',
+          operation: '0010', action: '', opStart: '2025-02-13T08:30:00', status: 'Not Dispatched', capacity: '5.00 H'
+        },
+        {
+          order: '4000002040', type: 'Planned Order', product: 'CH2_CP', description: 'CH2_CP, Chain', qty: 200, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-02-15', receiptDate: '2025-03-25', workCenter: 'QUALITY',
+          operation: '0050', action: '', opStart: '2025-02-28T09:45:00', status: 'Not Dispatched', capacity: '25.00 H'
+        },
+        {
+          order: '20359', type: 'Planned Order', product: 'FG1_CP', description: 'FG1_CP, Shaft with Rolling Bearings', qty: 65, uom: 'PC',
+          source: 'Production Version (0001)', reqDate: '2025-06-10', receiptDate: '2025-11-01', workCenter: 'ASSEMBLY',
+          operation: '0010', action: '', opStart: '2025-03-01T10:40:00', status: 'Not Dispatched', capacity: '5.50 H'
+        }
+      ];
+
+      const tbody = document.querySelector('#ordersTable tbody');
+      const orderCountEl = document.getElementById('orderCount');
+
+      function renderTable(data) {
+        tbody.innerHTML = '';
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <a href="#" title="${row.type}">${row.order}</a><br>
+              <small>${row.type}</small><br>
+              <small>Capacity Required: ${row.capacity}</small>
+            </td>
+            <td>
+              <a href="#">${row.product}</a><br>
+              <small>${row.description}</small>
+            </td>
+            <td>${row.qty} ${row.uom}</td>
+            <td>${row.source}</td>
+            <td>${row.reqDate}</td>
+            <td>${row.receiptDate}</td>
+            <td>${row.workCenter}</td>
+            <td>${row.operation}</td>
+            <td><button class="action-button">Reschedule</button></td>
+            <td>${row.opStart.replace('T', ' ')}</td>
+            <td>${row.status}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        orderCountEl.textContent = data.length;
+      }
+
+      // initial render
+      renderTable(orders);
+
+      // filter function
+      function applyFilters() {
+        const search = document.getElementById('searchInput').value.trim().toLowerCase();
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+        const workCenter = document.getElementById('workCenter').value;
+        const product = document.getElementById('productFilter').value;
+        const status = document.getElementById('statusFilter').value;
+        const results = orders.filter(o => {
+          // search match (order or product or description)
+          const q = o.order.toLowerCase() + ' ' + o.product.toLowerCase() + ' ' + o.description.toLowerCase();
+          if (search && !q.includes(search)) return false;
+          // date range filter on requirement date
+          if (fromDate && o.reqDate < fromDate) return false;
+          if (toDate && o.reqDate > toDate) return false;
+          // work center filter
+          if (workCenter && o.workCenter !== workCenter) return false;
+          // product filter
+          if (product && o.product !== product) return false;
+          // status filter
+          if (status && o.status !== status) return false;
+          return true;
+        });
+        renderTable(results);
+      }
+
+      document.getElementById('filterButton').addEventListener('click', applyFilters);
+      document.getElementById('searchInput').addEventListener('input', applyFilters);
+      document.getElementById('workCenter').addEventListener('change', applyFilters);
+      document.getElementById('productFilter').addEventListener('change', applyFilters);
+      document.getElementById('statusFilter').addEventListener('change', applyFilters);
+      document.getElementById('fromDate').addEventListener('change', applyFilters);
+      document.getElementById('toDate').addEventListener('change', applyFilters);
+
+      // theme toggle
+      const themeToggle = document.getElementById('themeToggle');
+      themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+      });
+    })();
+  </script>
+
+</body></html>
