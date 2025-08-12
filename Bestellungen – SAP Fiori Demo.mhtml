@@ -1,0 +1,349 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-E549F965-578F-4CAE-BC57-B4AF6F113322/sap_purchase_orders.html#
+Subject: =?utf-8?Q?Bestellungen=20=E2=80=93=20SAP=20Fiori=20Demo?=
+Date: Tue, 12 Aug 2025 13:52:46 +0200
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--Rq7aH4YovH6YrPix7qieZ3PBMlLd3XyIppMwKDdwWh----"
+
+
+------MultipartBoundary--Rq7aH4YovH6YrPix7qieZ3PBMlLd3XyIppMwKDdwWh----
+Content-Type: text/html
+Content-ID: <frame-FC566C016320E1C2C1081FDDC49BD814@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-E549F965-578F-4CAE-BC57-B4AF6F113322/sap_purchase_orders.html#
+
+<!DOCTYPE html><html lang=3D"de" data-theme=3D"light"><head><meta http-equi=
+v=3D"Content-Type" content=3D"text/html; charset=3DUTF-8"><link rel=3D"styl=
+esheet" type=3D"text/css" href=3D"cid:css-1ba000a6-d8d3-4437-b866-e58d8c37d=
+84a@mhtml.blink" />
+ =20
+  <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D=
+1">
+  <title>Bestellungen =E2=80=93 SAP Fiori Demo</title>
+  <!--
+    Diese Demo-Seite imitiert die Standardliste f=C3=BCr Bestellungen aus S=
+AP=E2=80=AFFiori.
+    Sie nutzt die SAP=E2=80=91Schrift =E2=80=9E72=E2=80=9C und bindet die S=
+AP=E2=80=91Icon=E2=80=91Schrift ein. =20
+    Zus=C3=A4tzlich implementiert sie einen Dark=E2=80=91/Light=E2=80=91Mod=
+us. =20
+  -->
+ =20
+</head>
+<body>
+  <div class=3D"app">
+    <!-- Header mit Logo und Titel -->
+    <header class=3D"app-header">
+      <span class=3D"sap-badge">SAP</span>
+      <span class=3D"app-title">Standard<span class=3D"icon" style=3D"font-=
+size:14px; margin-left:2px;">*</span></span>
+      <button class=3D"theme-toggle" id=3D"themeToggle" title=3D"Licht/Dunk=
+el umschalten">
+        <span class=3D"icon">=EE=82=AF</span>
+      </button>
+    </header>
+
+    <!-- Filterleiste -->
+    <div class=3D"filter-bar">
+      <div class=3D"filter-field">
+        <label for=3D"search">Suchen</label>
+        <div style=3D"position: relative;">
+          <input id=3D"search" type=3D"search" placeholder=3D"Suchen=E2=80=
+=A6">
+          <span class=3D"icon" style=3D"position:absolute; right:10px; top:=
+50%; transform:translateY(-50%);">=EE=80=8D</span>
+        </div>
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"status">Bearbeitungsstatus</label>
+        <select id=3D"status">
+          <option>Alle</option>
+          <option>Entwurf</option>
+          <option>In Genehmigung</option>
+          <option>Genehmigt</option>
+          <option>Abgelehnt</option>
+        </select>
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"supplier">Lieferant</label>
+        <input id=3D"supplier" type=3D"text">
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"ordernum">Bestellung</label>
+        <input id=3D"ordernum" type=3D"text">
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"buyer">Eink=C3=A4ufergruppe</label>
+        <input id=3D"buyer" type=3D"text">
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"company">Buchungskreis</label>
+        <select id=3D"company">
+          <option>Velotics Inc. (1710)</option>
+          <option>Velotics Inc. (1800)</option>
+          <option>Vantastic Bikes (1200)</option>
+          <option>Demo AG (1000)</option>
+        </select>
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"material">Material</label>
+        <input id=3D"material" type=3D"text">
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"plant">Werk</label>
+        <select id=3D"plant">
+          <option>Plant 1 US (1710)</option>
+          <option>Plant 2 EU (1800)</option>
+          <option>Plant 3 APJ (1200)</option>
+        </select>
+      </div>
+      <div class=3D"filter-field">
+        <label for=3D"orderdate">Bestelldatum</label>
+        <input id=3D"orderdate" type=3D"date">
+      </div>
+      <div class=3D"filter-actions">
+        <button class=3D"btn btn-primary"><span class=3D"icon">=EE=81=9B</s=
+pan>Start</button>
+        <button class=3D"btn btn-secondary"><span class=3D"icon">=EE=81=B6<=
+/span>Filter anpassen (2)</button>
+      </div>
+    </div>
+
+    <!-- Liste der Bestellungen -->
+    <section class=3D"order-section">
+      <div class=3D"orders-header">
+        <span>Bestellungen</span>
+        <span class=3D"count" id=3D"orderCount">(10)</span>
+        <span class=3D"icon" style=3D"font-size:14px; cursor:pointer;">=EE=
+=81=9F</span>
+      </div>
+      <div class=3D"action-links">
+        <a href=3D"file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0=
+000gp/T/remote-file-preview-E549F965-578F-4CAE-BC57-B4AF6F113322/sap_purcha=
+se_orders.html#">Kopieren</a>
+        <a href=3D"file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0=
+000gp/T/remote-file-preview-E549F965-578F-4CAE-BC57-B4AF6F113322/sap_purcha=
+se_orders.html#">Aus Genehmigungsprozess zur=C3=BCckziehen</a>
+        <a href=3D"file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0=
+000gp/T/remote-file-preview-E549F965-578F-4CAE-BC57-B4AF6F113322/sap_purcha=
+se_orders.html#">Anlegen</a>
+        <a href=3D"file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0=
+000gp/T/remote-file-preview-E549F965-578F-4CAE-BC57-B4AF6F113322/sap_purcha=
+se_orders.html#">L=C3=B6schen</a>
+      </div>
+      <div style=3D"overflow-x:auto;">
+      <table id=3D"ordersTable">
+        <thead>
+          <tr>
+            <th style=3D"width:32px;"><!-- checkbox column --></th>
+            <th>Bestellung</th>
+            <th>Lieferant</th>
+            <th>Buchungskreis</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody><tr><td><input type=3D"checkbox"></td><td><div class=3D"orde=
+r-title">Normalbestellung</div><div class=3D"subtext">4500057913<br>Genehmi=
+gungsstatus: Automatisch genehmigt<br>Genehmigender: Automatisch genehmigt<=
+br>Bestelldatum: 24.7.2025<br>Nettobestellwert: 22.225,89&nbsp;USD</div></t=
+d><td>Material Supply Corp (USSU-VSF03)</td><td>Velotics Inc. (1710)</td><t=
+d><span class=3D"status-tag status-followup">Folgebelege</span></td></tr><t=
+r><td><input type=3D"checkbox"></td><td><div class=3D"order-title">Normalbe=
+stellung</div><div class=3D"subtext">4500057912<br>Genehmigungsstatus: Auto=
+matisch genehmigt<br>Genehmigender: Automatisch genehmigt<br>Bestelldatum: =
+24.7.2025<br>Nettobestellwert: 2.315,82&nbsp;USD</div></td><td>Material Sup=
+ply Corp (USSU-VSF03)</td><td>Velotics Inc. (1710)</td><td><span class=3D"s=
+tatus-tag status-followup">Folgebelege</span></td></tr><tr><td><input type=
+=3D"checkbox"></td><td><div class=3D"order-title">Eilbestellung</div><div c=
+lass=3D"subtext">4500057920<br>Genehmigungsstatus: In Genehmigung<br>Genehm=
+igender: John Smith<br>Bestelldatum: 25.7.2025<br>Nettobestellwert: 7.834,0=
+0&nbsp;EUR</div></td><td>VeloCity EU GmbH (DE-EU01)</td><td>Vantastic Bikes=
+ (1200)</td><td><span class=3D"status-tag status-draft">Entwurf</span></td>=
+</tr><tr><td><input type=3D"checkbox"></td><td><div class=3D"order-title">N=
+ormalbestellung</div><div class=3D"subtext">4500057921<br>Genehmigungsstatu=
+s: Abgelehnt<br>Genehmigender: Marie Curie<br>Bestelldatum: 20.7.2025<br>Ne=
+ttobestellwert: 15.120,00&nbsp;USD</div></td><td>Global Bike Suppliers (USS=
+U-GB01)</td><td>Velotics Inc. (1800)</td><td><span class=3D"status-tag stat=
+us-pending">Abgelehnt</span></td></tr><tr><td><input type=3D"checkbox"></td=
+><td><div class=3D"order-title">Rahmenbestellung</div><div class=3D"subtext=
+">4500057922<br>Genehmigungsstatus: Genehmigt<br>Genehmigender: Automatisch=
+ genehmigt<br>Bestelldatum: 18.7.2025<br>Nettobestellwert: 50.000,00&nbsp;U=
+SD</div></td><td>Parts Supply Co (USSU-VSF06)</td><td>Velotics Inc. (1710)<=
+/td><td><span class=3D"status-tag status-followup">Folgebelege</span></td><=
+/tr><tr><td><input type=3D"checkbox"></td><td><div class=3D"order-title">Ko=
+nsignationsbestellung</div><div class=3D"subtext">4500057923<br>Genehmigung=
+sstatus: Entwurf<br>Genehmigender: =E2=80=93<br>Bestelldatum: 10.7.2025<br>=
+Nettobestellwert: 9.650,00&nbsp;USD</div></td><td>ChainLink Supplies (USSU-=
+CL02)</td><td>Demo AG (1000)</td><td><span class=3D"status-tag status-draft=
+">Entwurf</span></td></tr><tr><td><input type=3D"checkbox"></td><td><div cl=
+ass=3D"order-title">Subcontracting</div><div class=3D"subtext">4500057924<b=
+r>Genehmigungsstatus: Genehmigt<br>Genehmigender: Peter Parker<br>Bestellda=
+tum: 5.7.2025<br>Nettobestellwert: 3.470,00&nbsp;EUR</div></td><td>Euro Bik=
+e Parts (EURO-P01)</td><td>Velotics Inc. (1800)</td><td><span class=3D"stat=
+us-tag status-followup">Folgebelege</span></td></tr><tr><td><input type=3D"=
+checkbox"></td><td><div class=3D"order-title">Standardbestellung</div><div =
+class=3D"subtext">4500057925<br>Genehmigungsstatus: Automatisch genehmigt<b=
+r>Genehmigender: Automatisch genehmigt<br>Bestelldatum: 30.6.2025<br>Nettob=
+estellwert: 1.200,50&nbsp;USD</div></td><td>Material Supply Corp (USSU-VSF0=
+3)</td><td>Velotics Inc. (1710)</td><td><span class=3D"status-tag status-fo=
+llowup">Folgebelege</span></td></tr><tr><td><input type=3D"checkbox"></td><=
+td><div class=3D"order-title">Limitbestellung</div><div class=3D"subtext">4=
+500057926<br>Genehmigungsstatus: In Genehmigung<br>Genehmigender: Laura Che=
+n<br>Bestelldatum: 28.6.2025<br>Nettobestellwert: 25.000,00&nbsp;USD</div><=
+/td><td>Universal Electronics (USSU-UE01)</td><td>Vantastic Bikes (1200)</t=
+d><td><span class=3D"status-tag status-pending">In Genehmigung</span></td><=
+/tr><tr><td><input type=3D"checkbox"></td><td><div class=3D"order-title">No=
+rmalbestellung</div><div class=3D"subtext">4500057927<br>Genehmigungsstatus=
+: Genehmigt<br>Genehmigender: Automatisch genehmigt<br>Bestelldatum: 15.6.2=
+025<br>Nettobestellwert: 5.890,00&nbsp;USD</div></td><td>TechParts Inc (USS=
+U-TP01)</td><td>Demo AG (1000)</td><td><span class=3D"status-tag status-fol=
+lowup">Folgebelege</span></td></tr></tbody>
+      </table>
+      </div>
+    </section>
+  </div>
+
+ =20
+
+</body></html>
+------MultipartBoundary--Rq7aH4YovH6YrPix7qieZ3PBMlLd3XyIppMwKDdwWh----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-1ba000a6-d8d3-4437-b866-e58d8c37d84a@mhtml.blink
+
+@charset "utf-8";
+
+@font-face { font-family: "72"; src: url("https://ui5.sap.com/resources/sap=
+/ui/core/themes/base/fonts/72-Regular.woff2") format("woff2"); font-weight:=
+ normal; font-style: normal; }
+
+@font-face { font-family: "72"; src: url("https://ui5.sap.com/resources/sap=
+/ui/core/themes/base/fonts/72-Bold.woff2") format("woff2"); font-weight: bo=
+ld; font-style: normal; }
+
+@font-face { font-family: SAP-icons; src: url("https://ui5.sap.com/resource=
+s/sap/ui/core/themes/base/fonts/SAP-icons.woff2") format("woff2"); font-wei=
+ght: normal; font-style: normal; }
+
+:root { --bg: #f5f7fb; --surface: #ffffff; --text-primary: #0f172a; --text-=
+secondary: #475569; --border: rgba(15,23,42,0.15); --accent: #0a6ed1; --acc=
+ent-hover: #0854a0; --badge-bg: #0a6ed1; --badge-text: #ffffff; --table-hea=
+der-bg: #eef2f9; --chip-bg: #e5efff; --chip-text: #0a6ed1; }
+
+html[data-theme=3D"dark"] { --bg: #0b1220; --surface: #0f172a; --text-prima=
+ry: #f1f5f9; --text-secondary: #94a3b8; --border: rgba(148,163,184,0.25); -=
+-accent: #5fa4ea; --accent-hover: #3b82f6; --badge-bg: #1e3a8a; --badge-tex=
+t: #dbeafe; --table-header-bg: #111a2e; --chip-bg: #1e293b; --chip-text: #9=
+0cdf4; }
+
+body { margin: 0px; padding: 0px; font-family: "72", sans-serif; background=
+: var(--bg); color: var(--text-primary); }
+
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.app-header { display: flex; align-items: center; gap: 8px; padding: 16px 2=
+0px; background: var(--surface); border-bottom: 1px solid var(--border); po=
+sition: sticky; top: 0px; z-index: 10; }
+
+.sap-badge { display: inline-flex; align-items: center; justify-content: ce=
+nter; background: var(--badge-bg); color: var(--badge-text); font-weight: b=
+old; font-size: 14px; padding: 4px 8px; border-radius: 4px; }
+
+.app-title { font-size: 20px; font-weight: 600; }
+
+.theme-toggle { margin-left: auto; cursor: pointer; font-family: SAP-icons;=
+ font-size: 20px; padding: 6px; border-radius: 4px; background: var(--chip-=
+bg); color: var(--chip-text); border: 1px solid var(--border); }
+
+.theme-toggle:hover { background: var(--chip-text); color: var(--surface); =
+}
+
+.filter-bar { display: grid; grid-template-columns: repeat(auto-fill, minma=
+x(200px, 1fr)); gap: 12px; padding: 16px 20px; background: var(--surface); =
+border-bottom: 1px solid var(--border); }
+
+.filter-field { display: flex; flex-direction: column; gap: 4px; font-size:=
+ 12px; color: var(--text-secondary); }
+
+.filter-field input, .filter-field select { padding: 8px 10px; border: 1px =
+solid var(--border); border-radius: 4px; background: var(--bg); color: var(=
+--text-primary); font-family: "72", sans-serif; font-size: 14px; }
+
+.filter-field input::placeholder { color: var(--text-secondary); }
+
+.filter-actions { display: flex; align-items: center; gap: 8px; grid-column=
+: 1 / -1; margin-top: 4px; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14=
+px; font-size: 14px; border-radius: 4px; cursor: pointer; border: none; fon=
+t-weight: 600; }
+
+.btn-primary { background: var(--accent); color: rgb(255, 255, 255); }
+
+.btn-primary:hover { background: var(--accent-hover); }
+
+.btn-secondary { background: var(--chip-bg); color: var(--chip-text); borde=
+r: 1px solid var(--border); }
+
+.btn-secondary:hover { background: var(--chip-text); color: var(--surface);=
+ }
+
+.icon { font-family: SAP-icons; font-size: 16px; line-height: 1; }
+
+.order-section { padding: 20px; }
+
+.orders-header { display: flex; align-items: center; gap: 8px; margin-botto=
+m: 12px; font-size: 18px; font-weight: 600; }
+
+.orders-header .count { color: var(--accent); }
+
+.action-links { display: flex; gap: 16px; margin-bottom: 8px; font-size: 14=
+px; }
+
+.action-links a { color: var(--accent); text-decoration: none; position: re=
+lative; }
+
+.action-links a:hover { text-decoration: underline; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+
+thead { background: var(--table-header-bg); }
+
+th, td { padding: 10px 12px; text-align: left; font-size: 14px; border-bott=
+om: 1px solid var(--border); vertical-align: top; }
+
+th { font-weight: 600; color: var(--text-primary); }
+
+tr:hover td { background: rgba(0, 0, 0, 0.02); }
+
+.order-title { color: var(--accent); font-weight: 600; cursor: pointer; }
+
+.order-title:hover { text-decoration: underline; }
+
+.subtext { font-size: 12px; color: var(--text-secondary); line-height: 1.4;=
+ }
+
+.status-tag { display: inline-block; padding: 2px 6px; border-radius: 4px; =
+font-size: 12px; font-weight: 500; color: rgb(255, 255, 255); }
+
+.status-followup { background: rgb(10, 110, 209); }
+
+.status-approved { background: rgb(16, 126, 62); }
+
+.status-draft { background: rgb(194, 65, 12); }
+
+.status-pending { background: rgb(180, 83, 9); }
+
+@media (max-width: 860px) {
+  .filter-bar { grid-template-columns: 1fr; }
+  table thead { display: none; }
+  table, tr, td { display: block; width: 100%; }
+  tr { margin-bottom: 12px; border: 1px solid var(--border); border-radius:=
+ 6px; overflow: hidden; }
+  td { border: none; padding: 8px 12px; }
+  td[data-label]::before { content: attr(data-label) ': '; font-weight: 600=
+; color: var(--text-primary); display: inline-block; width: 40%; }
+}
+------MultipartBoundary--Rq7aH4YovH6YrPix7qieZ3PBMlLd3XyIppMwKDdwWh------
