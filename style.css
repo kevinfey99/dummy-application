@@ -1,0 +1,180 @@
+/* Theme variables and card styles for Work Zone dummy pages */
+
+/* Default (dark) theme */
+:root {
+  --bg-color: #0f172a;
+  --card-bg: #111827;
+  --text-color: #e2e8f0;
+  --muted-color: #94a3b8;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --border-radius: 20px;
+  --shadow-large: 0 20px 40px rgba(0, 0, 0, 0.4);
+  --shadow-small: 0 2px 6px rgba(0, 0, 0, 0.3);
+  --gradient-line: linear-gradient(90deg, #7dd3fc, #94a3b8, #c084fc, #fca5a5);
+}
+
+/* Light theme overrides. Applied to document.documentElement when 'light-theme' class is added */
+.light-theme {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-color: #1e293b;
+  --muted-color: #475569;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --shadow-large: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --shadow-small: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --gradient-line: linear-gradient(90deg, #7dd3fc, #94a3b8, #c084fc, #fca5a5);
+}
+
+/* Global layout */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Container to center the card */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Card with gradient headline line */
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-large);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: clamp(1.5rem, 4vw, 2rem);
+  overflow: hidden;
+}
+
+/* Gradient line at top of card */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  background-image: var(--gradient-line);
+}
+
+/* Headings and typography */
+h1, h2, h3 {
+  margin-top: 0;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+p {
+  color: var(--muted-color);
+  line-height: 1.6;
+}
+
+/* Button style */
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0.2rem;
+  box-shadow: var(--shadow-small);
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  background-color: var(--primary-hover);
+}
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-small);
+}
+
+/* Table styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+.table thead {
+  background-color: rgba(255,255,255,0.05);
+}
+.table th, .table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-align: left;
+}
+.light-theme .table th, .light-theme .table td {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.table tbody tr:hover {
+  background-color: rgba(255,255,255,0.05);
+  cursor: pointer;
+}
+.light-theme .table tbody tr:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  padding: 0.5rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--muted-color);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-small);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-toggle:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Simple form elements */
+input[type="text"], input[type="date"], select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  margin-right: 0.5rem;
+}
+.light-theme input[type="text"], .light-theme input[type="date"], .light-theme select {
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: #fff;
+  color: #1e293b;
+}
+
+/* Footer text within cards */
+.card-footer {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--muted-color);
+  text-align: right;
+}
