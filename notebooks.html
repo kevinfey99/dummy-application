@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<!-- saved from url=(0149)file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-0B44C5BA-3B6C-4B8E-A75C-2489958EA54B/overflow_toolbar_footer.html -->
+<html lang="de" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OverflowToolbar Footer – SAP Fiori Demo</title>
+  <!--
+    Nachbau des SAPUI5‑Beispiels „Overflow Toolbar mit Footer“.  
+    Diese Datei verwendet die proprietäre SAP‑Schrift „72“ und die SAP‑Icon‑Font
+    (siehe Fiori Design System Downloads【200140791909796†L60-L66】) sowie 
+    farbliche Akzente gemäß der SAP Horizon Theme Blaupalette.  
+    Ein Schieberegler oben steuert die verfügbare Breite der Toolbars, um das
+    Overflow-Verhalten zu testen.  
+  -->
+  <style>
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2');
+      font-weight: normal;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Bold.woff2') format('woff2');
+      font-weight: bold;
+    }
+    @font-face {
+      font-family: 'SAP-icons';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/SAP-icons.woff2') format('woff2');
+    }
+
+    :root {
+      --toolbar-perc: 100;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --border: rgba(15,23,42,0.15);
+      --accent: #0a6ed1;
+      --accent-hover: #0854a0;
+      --positive: #107e3e;
+      --negative: #c91f1f;
+    }
+    html[data-theme="dark"] {
+      --bg: #0b1220;
+      --surface: #0f172a;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border: rgba(148,163,184,0.25);
+      --accent: #5fa4ea;
+      --accent-hover: #3b82f6;
+      --positive: #34d399;
+      --negative: #f87171;
+    }
+    body {
+      margin: 0;
+      font-family: '72', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+    .note {
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .slider-container {
+      padding: 8px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    /* Toolbars */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      width: calc(var(--toolbar-perc) * 1%);
+      overflow: hidden;
+      transition: width 0.2s ease;
+    }
+    .toolbar.footer {
+      position: sticky;
+      bottom: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: none;
+      z-index: 5;
+    }
+    .search-box {
+      position: relative;
+      flex: 1 1 auto;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 6px 30px 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+    .search-box .icon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      pointer-events: none;
+      color: var(--text-secondary);
+    }
+    .icon {
+      font-family: 'SAP-icons';
+      font-style: normal;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .icon:hover {
+      background: var(--bg);
+    }
+    .btn {
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-family: '72', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-reset {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-reset:hover {
+      background: var(--accent-hover);
+    }
+    .btn-accept {
+      background: var(--positive);
+      color: #fff;
+    }
+    .btn-accept:hover {
+      filter: brightness(0.9);
+    }
+    .btn-reject {
+      background: var(--negative);
+      color: #fff;
+    }
+    .btn-reject:hover {
+      filter: brightness(0.9);
+    }
+    .table-wrapper {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      font-weight: bold;
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tr:hover td {
+      background: rgba(0,0,0,0.02);
+    }
+    .product {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .product-code {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .footer-right {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+    }
+    /* Responsive design */
+    @media (max-width: 840px) {
+      .toolbar {
+        flex-wrap: wrap;
+      }
+      .footer-right {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="note">
+    Verwende diesen Schieberegler, um die Toolbars zu verkleinern und ihr Overflow-Verhalten zu beobachten. Die Icon‑Buttons zeigen nur dann Text, wenn sie im Overflow erscheinen.
+  </div>
+  <div class="slider-container">
+    <input type="range" id="toolbarSlider" min="40" max="100" value="100">
+  </div>
+  <!-- Obere Toolbar -->
+  <div class="toolbar" id="topToolbar">
+    <div class="search-box">
+      <input type="search" placeholder="Search">
+      <span class="icon"></span>
+    </div>
+    <button class="btn btn-reset">Reset</button>
+    <span class="icon" title="Sortierung aufsteigend"></span>
+    <span class="icon" title="Filter"></span>
+    <span class="icon" title="Weitere Aktionen"></span>
+  </div>
+  <!-- Tabelle mit Produkten -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Supplier</th>
+          <th>Dimensions</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"><tr><td><span class="product">Notebook Basic 15</span><br><span class="product-code">HT-1000</span></td><td>Very Best Screens</td><td>30 x 18 x 3 cm</td><td style="text-align: right;">956.00 EUR</td></tr><tr><td><span class="product">Notebook Basic 17</span><br><span class="product-code">HT-1001</span></td><td>Very Best Screens</td><td>29 x 17 x 3.1 cm</td><td style="text-align: right;">1,249.00 EUR</td></tr><tr><td><span class="product">Notebook Basic 18</span><br><span class="product-code">HT-1002</span></td><td>Very Best Screens</td><td>28 x 19 x 2.5 cm</td><td style="text-align: right;">1,570.00 EUR</td></tr><tr><td><span class="product">Notebook Basic 19</span><br><span class="product-code">HT-1003</span></td><td>Smartcards</td><td>32 x 21 x 4 cm</td><td style="text-align: right;">1,650.00 EUR</td></tr><tr><td><span class="product">ITElO Vault</span><br><span class="product-code">HT-1007</span></td><td>Technocom</td><td>32 x 22 x 3 cm</td><td style="text-align: right;">299.00 EUR</td></tr><tr><td><span class="product">Notebook Professional 15</span><br><span class="product-code">HT-1010</span></td><td>Very Best Screens</td><td>33 x 20 x 3 cm</td><td style="text-align: right;">1,999.00 EUR</td></tr><tr><td><span class="product">Notebook Professional 17</span><br><span class="product-code">HT-1011</span></td><td>Very Best Screens</td><td>33 x 23 x 2 cm</td><td style="text-align: right;">2,299.00 EUR</td></tr><tr><td><span class="product">ITElO Vault Net</span><br><span class="product-code">HT-1020</span></td><td>Technocom</td><td>41 x 41 x 28 cm</td><td style="text-align: right;">139.00 EUR</td></tr><tr><td><span class="product">ITElO Vault SAT</span><br><span class="product-code">HT-1021</span></td><td>Technocom</td><td>46 x 32 x 25 cm</td><td style="text-align: right;">99.00 EUR</td></tr><tr><td><span class="product">Comfort Easy</span><br><span class="product-code">HT-1022</span></td><td>Technocom</td><td>84 x 1.5 x 14 cm</td><td style="text-align: right;">1,679.00 EUR</td></tr><tr><td><span class="product">Comfort Senior</span><br><span class="product-code">HT-1023</span></td><td>Technocom</td><td>80 x 1.6 x 13 cm</td><td style="text-align: right;">512.00 EUR</td></tr><tr><td><span class="product">Ergo Screen E-I</span><br><span class="product-code">HT-1030</span></td><td>Very Best Screens</td><td>37 x 12 x 36 cm</td><td style="text-align: right;">230.00 EUR</td></tr><tr><td><span class="product">Ergo Screen E-II</span><br><span class="product-code">HT-1031</span></td><td>Very Best Screens</td><td>40.8 x 19 x 43 cm</td><td style="text-align: right;">285.00 EUR</td></tr><tr><td><span class="product">Ergo Screen E-III</span><br><span class="product-code">HT-1032</span></td><td>Very Best Screens</td><td>40.8 x 19 x 43 cm</td><td style="text-align: right;">345.00 EUR</td></tr><tr><td><span class="product">Flat Basic</span><br><span class="product-code">HT-1035</span></td><td>Very Best Screens</td><td>39 x 20 x 41 cm</td><td style="text-align: right;">399.00 EUR</td></tr><tr><td><span class="product">Flat Future</span><br><span class="product-code">HT-1036</span></td><td>Very Best Screens</td><td>45 x 26 x 46 cm</td><td style="text-align: right;">430.00 EUR</td></tr><tr><td><span class="product">Flat XL</span><br><span class="product-code">HT-1037</span></td><td>Very Best Screens</td><td>54.5 x 22.1 x 39.1 cm</td><td style="text-align: right;">1,230.00 EUR</td></tr><tr><td><span class="product">Laser Professional Eco</span><br><span class="product-code">HT-1040</span></td><td>Alpha Printers</td><td>51 x 46 x 30 cm</td><td style="text-align: right;">830.00 EUR</td></tr><tr><td><span class="product">Laser Basic</span><br><span class="product-code">HT-1041</span></td><td>Alpha Printers</td><td>48 x 42 x 26 cm</td><td style="text-align: right;">490.00 EUR</td></tr><tr><td><span class="product">Laser Allround</span><br><span class="product-code">HT-1042</span></td><td>Alpha Printers</td><td>53 x 50 x 65 cm</td><td style="text-align: right;">349.00 EUR</td></tr></tbody>
+    </table>
+  </div>
+  <!-- Fußzeile -->
+  <div class="toolbar footer" id="footerToolbar">
+    <button class="btn btn-accept">Accept</button>
+    <button class="btn btn-reject">Reject</button>
+    <div class="footer-right">
+      <span class="icon" title="Edit"></span>
+      <span class="icon" title="Add"></span>
+      <span class="icon" title="Favorite"></span>
+      <span class="icon" title="Sort"></span>
+    </div>
+  </div>
+
+  <script>
+    // Steuerung der Breite der Toolbars über den Slider
+    const slider = document.getElementById('toolbarSlider');
+    slider.addEventListener('input', function() {
+      document.documentElement.style.setProperty('--toolbar-perc', this.value);
+    });
+
+    // Beispielhafte Produktdaten für die Tabelle
+    const products = [
+      { name:'Notebook Basic 15', code:'HT-1000', supplier:'Very Best Screens', dimensions:'30 x 18 x 3 cm', price:'956.00 EUR' },
+      { name:'Notebook Basic 17', code:'HT-1001', supplier:'Very Best Screens', dimensions:'29 x 17 x 3.1 cm', price:'1,249.00 EUR' },
+      { name:'Notebook Basic 18', code:'HT-1002', supplier:'Very Best Screens', dimensions:'28 x 19 x 2.5 cm', price:'1,570.00 EUR' },
+      { name:'Notebook Basic 19', code:'HT-1003', supplier:'Smartcards', dimensions:'32 x 21 x 4 cm', price:'1,650.00 EUR' },
+      { name:'ITElO Vault', code:'HT-1007', supplier:'Technocom', dimensions:'32 x 22 x 3 cm', price:'299.00 EUR' },
+      { name:'Notebook Professional 15', code:'HT-1010', supplier:'Very Best Screens', dimensions:'33 x 20 x 3 cm', price:'1,999.00 EUR' },
+      { name:'Notebook Professional 17', code:'HT-1011', supplier:'Very Best Screens', dimensions:'33 x 23 x 2 cm', price:'2,299.00 EUR' },
+      { name:'ITElO Vault Net', code:'HT-1020', supplier:'Technocom', dimensions:'41 x 41 x 28 cm', price:'139.00 EUR' },
+      { name:'ITElO Vault SAT', code:'HT-1021', supplier:'Technocom', dimensions:'46 x 32 x 25 cm', price:'99.00 EUR' },
+      { name:'Comfort Easy', code:'HT-1022', supplier:'Technocom', dimensions:'84 x 1.5 x 14 cm', price:'1,679.00 EUR' },
+      { name:'Comfort Senior', code:'HT-1023', supplier:'Technocom', dimensions:'80 x 1.6 x 13 cm', price:'512.00 EUR' },
+      { name:'Ergo Screen E-I', code:'HT-1030', supplier:'Very Best Screens', dimensions:'37 x 12 x 36 cm', price:'230.00 EUR' },
+      { name:'Ergo Screen E-II', code:'HT-1031', supplier:'Very Best Screens', dimensions:'40.8 x 19 x 43 cm', price:'285.00 EUR' },
+      { name:'Ergo Screen E-III', code:'HT-1032', supplier:'Very Best Screens', dimensions:'40.8 x 19 x 43 cm', price:'345.00 EUR' },
+      { name:'Flat Basic', code:'HT-1035', supplier:'Very Best Screens', dimensions:'39 x 20 x 41 cm', price:'399.00 EUR' },
+      { name:'Flat Future', code:'HT-1036', supplier:'Very Best Screens', dimensions:'45 x 26 x 46 cm', price:'430.00 EUR' },
+      { name:'Flat XL', code:'HT-1037', supplier:'Very Best Screens', dimensions:'54.5 x 22.1 x 39.1 cm', price:'1,230.00 EUR' },
+      { name:'Laser Professional Eco', code:'HT-1040', supplier:'Alpha Printers', dimensions:'51 x 46 x 30 cm', price:'830.00 EUR' },
+      { name:'Laser Basic', code:'HT-1041', supplier:'Alpha Printers', dimensions:'48 x 42 x 26 cm', price:'490.00 EUR' },
+      { name:'Laser Allround', code:'HT-1042', supplier:'Alpha Printers', dimensions:'53 x 50 x 65 cm', price:'349.00 EUR' }
+    ];
+    function renderTable() {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+      products.forEach(p => {
+        const tr = document.createElement('tr');
+        const tdProduct = document.createElement('td');
+        tdProduct.innerHTML = `<span class="product">${p.name}</span><br><span class="product-code">${p.code}</span>`;
+        const tdSupplier = document.createElement('td');
+        tdSupplier.textContent = p.supplier;
+        const tdDimensions = document.createElement('td');
+        tdDimensions.textContent = p.dimensions;
+        const tdPrice = document.createElement('td');
+        tdPrice.style.textAlign = 'right';
+        tdPrice.textContent = p.price;
+        tr.appendChild(tdProduct);
+        tr.appendChild(tdSupplier);
+        tr.appendChild(tdDimensions);
+        tr.appendChild(tdPrice);
+        tbody.appendChild(tr);
+      });
+    }
+    renderTable();
+  </script>
+
+</body></html>
