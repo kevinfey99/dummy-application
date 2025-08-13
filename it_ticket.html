@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<!-- saved from url=(0135)file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-BA051D6D-BFFA-4763-A518-F8B45A967320/it_ticket.html -->
-<html lang="de" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html>
+<!--
+  it_ticket.html
+
+  Diese Datei stellt ein Formular zur Erfassung eines IT‑Tickets bereit.
+  Sie nutzt SAP 72‑Font und SAP‑Icon‑Font sowie eine helle Morning‑Horizon‑Farbtabelle.
+-->
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>IT‑Ticket erstellen</title>
   <style>
-    /* Font declarations */
+    /* Fonts */
     @font-face {
       font-family: '72';
       src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2');
@@ -28,18 +34,18 @@
       font-display: swap;
     }
 
-    /* Theme colours (Morning Horizon) */
+    /* Farbschema (Horizon/Belize) */
     :root {
       --sapBrandColor: #0a6ed1;
       --sapHighlightColor: #80bdff;
       --sapTextColor: #32363a;
       --sapMutedColor: #6a7077;
-      --sapBackground: #f7f9fa;
+      --sapBackground: #f5f7fa;
       --sapSurface: #ffffff;
-      --sapBorder: rgba(0,0,0,0.16);
+      --sapBorder: #ccd4da;
       --sapInputBackground: #ffffff;
-      --sapInputBorder: rgba(0,0,0,0.2);
-      --sapInputHover: #eef2f6;
+      --sapInputBorder: #d1ddeb;
+      --sapInputHover: #f5f8fc;
       --sapButtonBackground: #0a6ed1;
       --sapButtonHover: #095fba;
       --sapButtonForeground: #ffffff;
@@ -62,13 +68,28 @@
       --sapBadgeBackground: #273656;
     }
 
-    /* Global styles */
+    /* Grundlegende Stile */
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; font-family: '72', Arial, sans-serif; }
-    body { background-color: var(--sapBackground); color: var(--sapTextColor); display: flex; align-items: center; justify-content: center; padding: 32px; }
+    body {
+      background-color: var(--sapBackground);
+      color: var(--sapTextColor);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
     .sap-icon { font-family: 'SAP-icons'; font-size: 1rem; }
 
-    /* Card */
+    /* Platzhalter Schrift */
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--sapMutedColor);
+      font-family: '72', Arial, sans-serif;
+      font-size: 0.875rem;
+    }
+
+    /* Karte */
     .card {
       width: 100%;
       max-width: 620px;
@@ -123,9 +144,7 @@
       border-color: var(--sapBrandColor);
       box-shadow: 0 0 0 2px var(--sapHighlightColor);
     }
-    textarea {
-      min-height: 100px;
-    }
+    textarea { min-height: 100px; }
     .inline-group {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -154,17 +173,13 @@
       color: var(--sapTextColor);
       transition: background-color 0.15s, border-color 0.15s;
     }
-    .btn:hover {
-      background-color: var(--sapInputHover);
-    }
+    .btn:hover { background-color: var(--sapInputHover); }
     .btn-primary {
       background-color: var(--sapButtonBackground);
       color: var(--sapButtonForeground);
       border-color: var(--sapButtonBackground);
     }
-    .btn-primary:hover {
-      background-color: var(--sapButtonHover);
-    }
+    .btn-primary:hover { background-color: var(--sapButtonHover); }
     .file-count {
       font-size: 0.75rem;
       color: var(--sapMutedColor);
@@ -181,15 +196,67 @@
       color: var(--sapMutedColor);
       line-height: 1.4;
     }
+
+    /* Fehlermeldung */
+    .error-msg {
+      display: none;
+      background-color: #fdecea;
+      border: 1px solid #f5c2c7;
+      color: #b20000;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      margin-bottom: 12px;
+    }
+
+    /* Erfolgs-Popup */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+    .popup .popup-content {
+      background-color: var(--sapSurface);
+      border: 1px solid var(--sapBorder);
+      border-radius: 12px;
+      padding: 24px 28px;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .popup .popup-content h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .popup .popup-content p {
+      margin: 12px 0 20px;
+      font-size: 0.875rem;
+      color: var(--sapTextColor);
+    }
+    .popup .btn-close {
+      background-color: var(--sapButtonBackground);
+      color: var(--sapButtonForeground);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
     .card-footer {
       padding: 16px 24px;
       border-top: 1px solid var(--sapBorder);
       display: flex;
       justify-content: flex-end;
     }
-    .required {
-      color: var(--sapNegativeColor, #cc191c);
-    }
+    .required { color: var(--sapNegativeColor, #cc191c); }
   </style>
 </head>
 <body>
@@ -198,13 +265,13 @@
       <h1>IT‑Ticket erstellen</h1>
       <p>Problem melden. Screenshot aufnehmen oder Bild hochladen. Felder mit <span class="required">*</span> sind Pflicht.</p>
     </div>
-    <form id="ticketForm" novalidate="">
+    <form id="ticketForm" novalidate>
       <div class="card-body">
         <div class="inline-group">
           <div>
             <label for="category">Kategorie <span class="required">*</span></label>
-            <select id="category" required="">
-              <option value="" disabled="" selected="" hidden="">Bitte wählen</option>
+            <select id="category" required>
+              <option value="" disabled selected hidden>Bitte wählen</option>
               <option>Software</option>
               <option>Hardware</option>
               <option>Netzwerk</option>
@@ -214,8 +281,8 @@
           </div>
           <div>
             <label for="priority">Priorität <span class="required">*</span></label>
-            <select id="priority" required="">
-              <option value="" disabled="" selected="" hidden="">Bitte wählen</option>
+            <select id="priority" required>
+              <option value="" disabled selected hidden>Bitte wählen</option>
               <option>Niedrig</option>
               <option>Mittel</option>
               <option>Hoch</option>
@@ -225,44 +292,54 @@
         </div>
         <div>
           <label for="summary">Zusammenfassung <span class="required">*</span></label>
-          <input type="text" id="summary" placeholder="Kurztitel des Problems" required="">
+          <input type="text" id="summary" placeholder="Kurztitel des Problems" required />
         </div>
         <div>
           <label for="description">Beschreibung <span class="required">*</span></label>
-          <textarea id="description" placeholder="Was passiert? Seit wann? Welche Schritte reproduzieren das Problem?" required=""></textarea>
+          <textarea id="description" placeholder="Was passiert? Seit wann? Welche Schritte reproduzieren das Problem?" required></textarea>
         </div>
         <div class="inline-group">
           <div>
             <label for="email">Kontakt‑E‑Mail <span class="required">*</span></label>
-            <input type="email" id="email" placeholder="vorname.nachname@firma.de" required="">
+            <input type="email" id="email" placeholder="vorname.nachname@firma.de" required />
           </div>
           <div>
             <label for="asset">System/Asset</label>
-            <input type="text" id="asset" placeholder="z. B. Laptop‑Nummer, Hostname">
+            <input type="text" id="asset" placeholder="z. B. Laptop‑Nummer, Hostname" />
           </div>
         </div>
         <div class="attachment-section">
           <label>Nachweise</label>
           <div class="attachment-buttons">
-            <button type="button" class="btn" id="chooseFiles"><span class="sap-icon"></span> Dateien auswählen</button>
-            <button type="button" class="btn" id="chooseScreenshot"><span class="sap-icon"></span> Screenshot</button>
-            <button type="button" class="btn" id="chooseCamera"><span class="sap-icon"></span> Kamera</button>
+            <button type="button" class="btn" id="chooseFiles"><span class="sap-icon">&#xe1c9;</span> Dateien auswählen</button>
+            <button type="button" class="btn" id="chooseScreenshot"><span class="sap-icon">&#xe1ee;</span> Screenshot</button>
+            <button type="button" class="btn" id="chooseCamera"><span class="sap-icon">&#xe00f;</span> Kamera</button>
           </div>
-          <span class="file-count" id="fileCount">0/5 Bilder ausgewählt</span>
+          <span class="file-count" id="fileCount">0/5 Dateien ausgewählt</span>
           <ul class="files-list" id="fileList"></ul>
-          <input type="file" id="fileInput" multiple="" accept="image/*,.pdf,.doc,.docx" style="display:none">
+          <input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx" style="display:none" />
         </div>
         <div class="agreement">
           Durch Absenden stimmen Sie der Verarbeitung zu.
         </div>
       </div>
+      <!-- Fehleranzeige -->
+      <div id="errorMsg" class="error-msg" role="alert"></div>
       <div class="card-footer">
         <button type="submit" class="btn btn-primary">Ticket senden</button>
       </div>
     </form>
   </div>
+  <!-- Erfolgs-Overlay -->
+  <div id="successPopup" class="popup" aria-hidden="true">
+    <div class="popup-content" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <h2 id="successTitle">Ticket erfolgreich erstellt</h2>
+      <p>Ihr IT‑Ticket wurde erfolgreich abgeschickt. Wir werden uns schnellstmöglich melden.</p>
+      <button type="button" class="btn-close" id="closePopup">OK</button>
+    </div>
+  </div>
   <script>
-    // Helper: update file list and count
+    // Datei-Auswahl und Anzeige
     const fileInput = document.getElementById('fileInput');
     const fileCount = document.getElementById('fileCount');
     const fileList = document.getElementById('fileList');
@@ -282,7 +359,7 @@
       }
     }
     fileInput.addEventListener('change', updateFiles);
-    // Buttons to trigger file chooser
+    // Upload-Buttons verknüpfen
     document.getElementById('chooseFiles').addEventListener('click', () => {
       fileInput.accept = '';
       fileInput.capture = '';
@@ -298,23 +375,36 @@
       fileInput.capture = 'environment';
       fileInput.click();
     });
-    // Form submission handler
+    // Formular verarbeiten
     document.getElementById('ticketForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      // Validate required fields (browser does this by default, but we can show message)
-      if (!e.target.checkValidity()) {
-        alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
+      const form = e.target;
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.style.display = 'none';
+      errorMsg.textContent = '';
+      // Browser-Validierung: Wenn Pflichtfelder fehlen
+      if (!form.checkValidity()) {
+        errorMsg.textContent = 'Bitte füllen Sie alle Pflichtfelder korrekt aus.';
+        errorMsg.style.display = 'block';
         return;
       }
-      // Show summary (demo)
-      alert('Ticket wurde erfolgreich erstellt!\n\nKategorie: ' + document.getElementById('category').value +
-            '\nPriorität: ' + document.getElementById('priority').value +
-            '\nZusammenfassung: ' + document.getElementById('summary').value);
-      // Reset form
-      e.target.reset();
-      fileInput.value = '';
-      updateFiles();
+      // Alles korrekt -> Popup einblenden
+      const popup = document.getElementById('successPopup');
+      popup.style.display = 'flex';
+      popup.setAttribute('aria-hidden','false');
+      // Formular leeren
+      setTimeout(() => {
+        form.reset();
+        fileInput.value = '';
+        updateFiles();
+      }, 0);
+    });
+    // Popup schließen
+    document.getElementById('closePopup').addEventListener('click', () => {
+      const popup = document.getElementById('successPopup');
+      popup.style.display = 'none';
+      popup.setAttribute('aria-hidden','true');
     });
   </script>
-
-</body></html>
+</body>
+</html>
