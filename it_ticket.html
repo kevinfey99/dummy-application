@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<!-- saved from url=(0135)file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-BA051D6D-BFFA-4763-A518-F8B45A967320/it_ticket.html -->
+<html lang="de" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IT‑Ticket erstellen</title>
+  <style>
+    /* Font declarations */
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'SAP-icons';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/SAP-icons.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* Theme colours (Morning Horizon) */
+    :root {
+      --sapBrandColor: #0a6ed1;
+      --sapHighlightColor: #80bdff;
+      --sapTextColor: #32363a;
+      --sapMutedColor: #6a7077;
+      --sapBackground: #f7f9fa;
+      --sapSurface: #ffffff;
+      --sapBorder: rgba(0,0,0,0.16);
+      --sapInputBackground: #ffffff;
+      --sapInputBorder: rgba(0,0,0,0.2);
+      --sapInputHover: #eef2f6;
+      --sapButtonBackground: #0a6ed1;
+      --sapButtonHover: #095fba;
+      --sapButtonForeground: #ffffff;
+      --sapBadgeBackground: #e5eef7;
+    }
+    html[data-theme="dark"] {
+      --sapBrandColor: #1b81d5;
+      --sapHighlightColor: #699ddb;
+      --sapTextColor: #e9ecf0;
+      --sapMutedColor: #9ea6b0;
+      --sapBackground: #0b1220;
+      --sapSurface: #1a253c;
+      --sapBorder: rgba(255,255,255,0.16);
+      --sapInputBackground: #1a253c;
+      --sapInputBorder: rgba(255,255,255,0.2);
+      --sapInputHover: #223352;
+      --sapButtonBackground: #1b81d5;
+      --sapButtonHover: #166ab2;
+      --sapButtonForeground: #ffffff;
+      --sapBadgeBackground: #273656;
+    }
+
+    /* Global styles */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: '72', Arial, sans-serif; }
+    body { background-color: var(--sapBackground); color: var(--sapTextColor); display: flex; align-items: center; justify-content: center; padding: 32px; }
+    .sap-icon { font-family: 'SAP-icons'; font-size: 1rem; }
+
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: 620px;
+      background-color: var(--sapSurface);
+      border: 1px solid var(--sapBorder);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 20px 24px 10px;
+      border-bottom: 1px solid var(--sapBorder);
+    }
+    .card-header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .card-header p {
+      margin: 6px 0 0;
+      font-size: 0.875rem;
+      color: var(--sapMutedColor);
+    }
+    .card-body {
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    select, input[type="text"], input[type="email"], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--sapInputBorder);
+      border-radius: 8px;
+      background-color: var(--sapInputBackground);
+      color: var(--sapTextColor);
+      font-size: 0.875rem;
+      resize: vertical;
+      min-height: 42px;
+    }
+    select:hover, input:hover, textarea:hover {
+      background-color: var(--sapInputHover);
+    }
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--sapBrandColor);
+      box-shadow: 0 0 0 2px var(--sapHighlightColor);
+    }
+    textarea {
+      min-height: 100px;
+    }
+    .inline-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .attachment-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .attachment-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--sapBorder);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      background-color: var(--sapSurface);
+      color: var(--sapTextColor);
+      transition: background-color 0.15s, border-color 0.15s;
+    }
+    .btn:hover {
+      background-color: var(--sapInputHover);
+    }
+    .btn-primary {
+      background-color: var(--sapButtonBackground);
+      color: var(--sapButtonForeground);
+      border-color: var(--sapButtonBackground);
+    }
+    .btn-primary:hover {
+      background-color: var(--sapButtonHover);
+    }
+    .file-count {
+      font-size: 0.75rem;
+      color: var(--sapMutedColor);
+    }
+    .files-list {
+      font-size: 0.75rem;
+      color: var(--sapTextColor);
+      list-style: none;
+      padding-left: 20px;
+      margin: 0;
+    }
+    .agreement {
+      font-size: 0.75rem;
+      color: var(--sapMutedColor);
+      line-height: 1.4;
+    }
+    .card-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--sapBorder);
+      display: flex;
+      justify-content: flex-end;
+    }
+    .required {
+      color: var(--sapNegativeColor, #cc191c);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <h1>IT‑Ticket erstellen</h1>
+      <p>Problem melden. Screenshot aufnehmen oder Bild hochladen. Felder mit <span class="required">*</span> sind Pflicht.</p>
+    </div>
+    <form id="ticketForm" novalidate="">
+      <div class="card-body">
+        <div class="inline-group">
+          <div>
+            <label for="category">Kategorie <span class="required">*</span></label>
+            <select id="category" required="">
+              <option value="" disabled="" selected="" hidden="">Bitte wählen</option>
+              <option>Software</option>
+              <option>Hardware</option>
+              <option>Netzwerk</option>
+              <option>Security</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div>
+            <label for="priority">Priorität <span class="required">*</span></label>
+            <select id="priority" required="">
+              <option value="" disabled="" selected="" hidden="">Bitte wählen</option>
+              <option>Niedrig</option>
+              <option>Mittel</option>
+              <option>Hoch</option>
+              <option>Kritisch</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="summary">Zusammenfassung <span class="required">*</span></label>
+          <input type="text" id="summary" placeholder="Kurztitel des Problems" required="">
+        </div>
+        <div>
+          <label for="description">Beschreibung <span class="required">*</span></label>
+          <textarea id="description" placeholder="Was passiert? Seit wann? Welche Schritte reproduzieren das Problem?" required=""></textarea>
+        </div>
+        <div class="inline-group">
+          <div>
+            <label for="email">Kontakt‑E‑Mail <span class="required">*</span></label>
+            <input type="email" id="email" placeholder="vorname.nachname@firma.de" required="">
+          </div>
+          <div>
+            <label for="asset">System/Asset</label>
+            <input type="text" id="asset" placeholder="z. B. Laptop‑Nummer, Hostname">
+          </div>
+        </div>
+        <div class="attachment-section">
+          <label>Nachweise</label>
+          <div class="attachment-buttons">
+            <button type="button" class="btn" id="chooseFiles"><span class="sap-icon"></span> Dateien auswählen</button>
+            <button type="button" class="btn" id="chooseScreenshot"><span class="sap-icon"></span> Screenshot</button>
+            <button type="button" class="btn" id="chooseCamera"><span class="sap-icon"></span> Kamera</button>
+          </div>
+          <span class="file-count" id="fileCount">0/5 Bilder ausgewählt</span>
+          <ul class="files-list" id="fileList"></ul>
+          <input type="file" id="fileInput" multiple="" accept="image/*,.pdf,.doc,.docx" style="display:none">
+        </div>
+        <div class="agreement">
+          Durch Absenden stimmen Sie der Verarbeitung zu.
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Ticket senden</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    // Helper: update file list and count
+    const fileInput = document.getElementById('fileInput');
+    const fileCount = document.getElementById('fileCount');
+    const fileList = document.getElementById('fileList');
+    function updateFiles() {
+      const files = Array.from(fileInput.files);
+      fileCount.textContent = files.length + '/5 Dateien ausgewählt';
+      fileList.innerHTML = '';
+      files.slice(0,5).forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = f.name;
+        fileList.appendChild(li);
+      });
+      if (files.length > 5) {
+        fileInput.value = '';
+        alert('Es können maximal 5 Dateien hochgeladen werden.');
+        updateFiles();
+      }
+    }
+    fileInput.addEventListener('change', updateFiles);
+    // Buttons to trigger file chooser
+    document.getElementById('chooseFiles').addEventListener('click', () => {
+      fileInput.accept = '';
+      fileInput.capture = '';
+      fileInput.click();
+    });
+    document.getElementById('chooseScreenshot').addEventListener('click', () => {
+      fileInput.accept = 'image/*';
+      fileInput.capture = '';
+      fileInput.click();
+    });
+    document.getElementById('chooseCamera').addEventListener('click', () => {
+      fileInput.accept = 'image/*';
+      fileInput.capture = 'environment';
+      fileInput.click();
+    });
+    // Form submission handler
+    document.getElementById('ticketForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Validate required fields (browser does this by default, but we can show message)
+      if (!e.target.checkValidity()) {
+        alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
+        return;
+      }
+      // Show summary (demo)
+      alert('Ticket wurde erfolgreich erstellt!\n\nKategorie: ' + document.getElementById('category').value +
+            '\nPriorität: ' + document.getElementById('priority').value +
+            '\nZusammenfassung: ' + document.getElementById('summary').value);
+      // Reset form
+      e.target.reset();
+      fileInput.value = '';
+      updateFiles();
+    });
+  </script>
+
+</body></html>
