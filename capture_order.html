@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!-- saved from url=(0143)file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-919449EC-20F1-4458-B056-351BDCFBCE7B/auftragserfassung.html -->
+<html lang="en" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Capture</title>
+  <style>
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2');
+      font-weight: normal;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Bold.woff2') format('woff2');
+      font-weight: bold;
+    }
+    :root {
+      --toolbar-perc: 100;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --border: rgba(15,23,42,0.15);
+      --accent: #0a6ed1;
+      --accent-hover: #0854a0;
+      --positive: #107e3e;
+      --negative: #c91f1f;
+    }
+    body { margin: 0; font-family: '72', sans-serif; background: var(--bg); color: var(--text-primary); }
+    .note { padding: 8px 16px; font-size: 12px; color: var(--text-secondary); background: var(--surface); border-bottom: 1px solid var(--border); }
+    .slider-container { padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+    input[type="range"] { width: 100%; }
+    .toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--border); width: calc(var(--toolbar-perc) * 1%); overflow: hidden; transition: width 0.2s ease; }
+    .toolbar.footer { position: sticky; bottom: 0; border-top: 1px solid var(--border); border-bottom: none; z-index: 5; }
+    .language-switcher { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); font-family: '72'; font-size: 14px; }
+    .form-container { padding: 24px; }
+    form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; background: var(--surface); padding: 16px; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    label { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+    input[type="text"], input[type="number"], input[type="date"], textarea, select.product-select { width: 100%; padding: 6px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); font-family: '72'; font-size: 14px; }
+    textarea { resize: vertical; min-height: 60px; }
+    .form-buttons { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+    .btn { border: none; border-radius: 4px; padding: 8px 16px; font-family: '72'; font-size: 14px; cursor: pointer; }
+    .btn-save { background: var(--accent); color: #fff; }
+    .btn-save:hover { background: var(--accent-hover); }
+    .btn-cancel { background: var(--negative); color: #fff; }
+    .btn-cancel:hover { filter: brightness(0.9); }
+  </style>
+</head>
+<body>
+  <div class="note">
+    <span data-i18n="note">Use the slider below to shrink the toolbar and observe its overflow behavior. Icon buttons will show text only when they appear in the overflow.</span>
+  </div>
+  <div class="slider-container">
+    <input type="range" id="toolbarSlider" min="40" max="100" value="100">
+  </div>
+  <div class="toolbar" id="topToolbar">
+    <h2 id="formTitle">Order Capture</h2>
+    <div class="language-switcher">
+      <label for="langSelector">🌐</label>
+      <select id="langSelector">
+        <option value="en" selected="">English</option>
+        <option value="de">Deutsch</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <form id="orderForm">
+      <div>
+        <label for="orderId" data-i18n="orderId">Order ID</label>
+        <input type="text" id="orderId" required="">
+      </div>
+      <div>
+        <label for="customerName" data-i18n="customer">Customer Name</label>
+        <input type="text" id="customerName" required="">
+      </div>
+      <div>
+        <label for="product" data-i18n="product">Product</label>
+        <select id="product" class="product-select">
+          <option value="laptop">Laptop</option>
+          <option value="monitor">Monitor</option>
+          <option value="printer">Printer</option>
+          <option value="accessory">Accessory</option>
+        </select>
+      </div>
+      <div>
+        <label for="quantity" data-i18n="quantity">Quantity</label>
+        <input type="number" id="quantity" min="1" value="1" required="">
+      </div>
+      <div>
+        <label for="price" data-i18n="price">Price per Unit (EUR)</label>
+        <input type="number" id="price" min="0" step="0.01" value="0" required="">
+      </div>
+      <div>
+        <label for="deliveryDate" data-i18n="deliveryDate">Delivery Date</label>
+        <input type="date" id="deliveryDate" required="">
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <label for="comments" data-i18n="comments">Comments</label>
+        <textarea id="comments"></textarea>
+      </div>
+      <div class="form-buttons">
+        <button type="button" class="btn btn-save" id="saveBtn" data-i18n="save">Save Order</button>
+        <button type="reset" class="btn btn-cancel" data-i18n="cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+// Language translations
+const translations = {
+  en: {
+    note: 'Use the slider below to shrink the toolbar and observe its overflow behavior. Icon buttons will show text only when they appear in the overflow.',
+    'formTitle': 'Order Capture',
+    orderId: 'Order ID',
+    customer: 'Customer Name',
+    product: 'Product',
+    quantity: 'Quantity',
+    price: 'Price per Unit (EUR)',
+    deliveryDate: 'Delivery Date',
+    comments: 'Comments',
+    save: 'Save Order',
+    cancel: 'Cancel'
+  },
+  de: {
+    note: 'Verwenden Sie den Schieberegler unten, um die Toolbar zu verkleinern und ihr Overflow‑Verhalten zu beobachten. Icon‑Buttons zeigen nur dann Text, wenn sie im Overflow erscheinen.',
+    'formTitle': 'Auftragserfassung',
+    orderId: 'Auftragsnummer',
+    customer: 'Kundenname',
+    product: 'Produkt',
+    quantity: 'Menge',
+    price: 'Preis pro Einheit (EUR)',
+    deliveryDate: 'Lieferdatum',
+    comments: 'Bemerkungen',
+    save: 'Auftrag speichern',
+    cancel: 'Abbrechen'
+  }
+};
+
+function updateLanguage(lang) {
+  // update static text
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = translations[lang][key];
+  });
+  // update dynamic title
+  document.getElementById('formTitle').textContent = translations[lang]['formTitle'];
+}
+
+document.getElementById('langSelector').addEventListener('change', function() {
+  updateLanguage(this.value);
+});
+// initial language
+updateLanguage('en');
+
+// Slider for toolbar
+const slider = document.getElementById('toolbarSlider');
+slider.addEventListener('input', function() {
+  document.documentElement.style.setProperty('--toolbar-perc', this.value);
+});
+
+// Save button action (mock)
+document.getElementById('saveBtn').addEventListener('click', () => {
+  alert('Order saved!');
+});
+</script>
+
+
+</body></html>
