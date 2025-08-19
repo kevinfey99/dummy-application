@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sales Managers Overview</title>
+  <style>
+    @font-face { font-family: '72'; src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2'); font-weight: 400; }
+    @font-face { font-family: '72'; src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Bold.woff2') format('woff2'); font-weight: 700; }
+    @font-face { font-family: 'SAP-icons'; src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/SAP-icons.woff2') format('woff2'); }
+
+    :root{
+      --bg:#f5f7fb;--surface:#ffffff;--text:#0f172a;--muted:#475569;--border:rgba(15,23,42,.15);
+      --accent:#0a6ed1;--accent-2:#0854a0;--pos:#107e3e;
+    }
+    html[data-theme="dark"]{
+      --bg:#0b1220;--surface:#0f172a;--text:#f1f5f9;--muted:#94a3b8;--border:rgba(148,163,184,.25);
+      --accent:#5fa4ea;--accent-2:#3b82f6;--pos:#34d399;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:'72',system-ui,Segoe UI,Arial,sans-serif}
+    .toolbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border)}
+    .toolbar h2{margin:0;font-size:20px}
+    .language-switcher{margin-left:auto;display:flex;align-items:center;gap:8px}
+    select{padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text)}
+    .btn{border:none;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+    .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-2)}
+    .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:12px 16px}
+    .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px}
+    .metric-value{font-weight:700;font-size:20px}
+    .metric-label{color:var(--muted);font-size:12px}
+    .searchbar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .searchbar .box{position:relative;flex:1}
+    .searchbar input{width:100%;padding:8px 32px 8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text)}
+    .icon{font-family:'SAP-icons';font-style:normal}
+    .searchbar .icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px}
+    .table-wrap{padding:0 16px 16px}
+    table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:14px;text-align:left}
+    th{background:var(--surface);position:sticky;top:0;z-index:1}
+    tr:hover td{background:rgba(0,0,0,.02)}
+    .num{text-align:right}
+    .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border);color:var(--muted)}
+    .link{background:none;border:none;color:var(--accent);cursor:pointer;padding:0;font:inherit;text-align:left}
+    .footerbar{position:sticky;bottom:0;display:flex;gap:8px;padding:10px 16px;background:var(--surface);border-top:1px solid var(--border)}
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:16px}
+    .modal .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;max-width:640px;width:100%;padding:16px}
+    .modal .row{display:grid;grid-template-columns:160px 1fr;gap:8px;margin:6px 0}
+    .modal h3{margin:0 0 8px 0}
+    @media (max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:600px){.metrics{grid-template-columns:1fr}.modal .row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <div class="toolbar">
+    <h2 id="pageTitle">Sales Manager Overview</h2>
+    <button id="addManagerBtn" class="btn btn-primary"></button>
+    <div class="language-switcher">
+      <label for="langSel" title="Language">🌐</label>
+      <select id="langSel">
+        <option value="en" selected>English</option>
+        <option value="de">Deutsch</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric-card"><div id="mCount" class="metric-value">—</div><div class="metric-label" data-i18n="totalManagers"></div></div>
+    <div class="metric-card"><div id="mOrders" class="metric-value">—</div><div class="metric-label" data-i18n="totalOrders"></div></div>
+    <div class="metric-card"><div id="mRevenue" class="metric-value">—</div><div class="metric-label" data-i18n="totalRevenue"></div></div>
+    <div class="metric-card"><div id="mAvg" class="metric-value">—</div><div class="metric-label" data-i18n="avgRevenue"></div></div>
+  </div>
+
+  <!-- Search & actions -->
+  <div class="searchbar">
+    <div class="box">
+      <input id="search" type="search" placeholder="Search" />
+      <span class="icon"></span>
+    </div>
+    <button id="reset" class="btn btn-ghost" data-i18n="reset"></button>
+    <button id="toggleSort" class="btn btn-ghost">⬍</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th data-i18n="managerId"></th>
+          <th data-i18n="name"></th>
+          <th data-i18n="region"></th>
+          <th class="num" data-i18n="orders"></th>
+          <th class="num" data-i18n="revenue"></th>
+          <th data-i18n="performance"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Footer actions -->
+  <div class="footerbar">
+    <button class="btn btn-ghost" id="exportCsv">CSV</button>
+    <button class="btn btn-ghost" id="exportJson">JSON</button>
+  </div>
+
+  <!-- Detail modal -->
+  <div id="detailModal" class="modal" role="dialog" aria-modal="true">
+    <div class="card">
+      <h3 id="dName">—</h3>
+      <div class="row"><div data-i18n="managerId"></div><div id="dId"></div></div>
+      <div class="row"><div data-i18n="region"></div><div id="dRegion"></div></div>
+      <div class="row"><div data-i18n="orders"></div><div id="dOrders"></div></div>
+      <div class="row"><div data-i18n="revenue"></div><div id="dRevenue"></div></div>
+      <div class="row"><div data-i18n="performance"></div><div id="dPerf"></div></div>
+      <div class="row"><div data-i18n="email"></div><div id="dEmail"></div></div>
+      <div class="row"><div data-i18n="phone"></div><div id="dPhone"></div></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+        <button id="closeModal" class="btn btn-ghost" data-i18n="close"></button>
+        <button id="editBtn" class="btn btn-primary">Edit</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ====== Data (10 managers) ====== */
+const managers = [
+  {id:'MGR-1001', name:'Anna Schmidt',   region:'North',  orders:132, revenue:78500,  performance:'excellent', email:'anna.schmidt@acme.eu',   phone:'+49 611 123456'},
+  {id:'MGR-1002', name:'Boris Becker',   region:'South',  orders:115, revenue:72000,  performance:'good',       email:'boris.becker@acme.eu',   phone:'+49 89 234567'},
+  {id:'MGR-1003', name:'Clara Wagner',   region:'East',   orders:128, revenue:81000,  performance:'excellent',  email:'clara.wagner@acme.eu',   phone:'+49 30 345678'},
+  {id:'MGR-1004', name:'David Klein',    region:'West',   orders: 97, revenue:54000,  performance:'average',    email:'david.klein@acme.eu',    phone:'+49 211 456789'},
+  {id:'MGR-1005', name:'Eva Müller',     region:'Central',orders:121, revenue:76000,  performance:'good',       email:'eva.mueller@acme.eu',    phone:'+49 6131 987654'},
+  {id:'MGR-1006', name:'Felix Braun',    region:'North',  orders:139, revenue:90500,  performance:'excellent',  email:'felix.braun@acme.eu',    phone:'+49 40 222333'},
+  {id:'MGR-1007', name:'Greta Hoffmann', region:'South',  orders:108, revenue:63500,  performance:'good',       email:'greta.hoffmann@acme.eu', phone:'+49 711 111222'},
+  {id:'MGR-1008', name:'Hannes Vogel',   region:'East',   orders: 88, revenue:49500,  performance:'average',    email:'hannes.vogel@acme.eu',   phone:'+49 351 333444'},
+  {id:'MGR-1009', name:'Isabel König',   region:'West',   orders:104, revenue:68000,  performance:'good',       email:'isabel.koenig@acme.eu',  phone:'+49 221 555666'},
+  {id:'MGR-1010', name:'Jonas Richter',  region:'Central',orders:146, revenue:99000,  performance:'excellent',  email:'jonas.richter@acme.eu',  phone:'+49 69 777888'}
+];
+
+/* ====== i18n ====== */
+const t = {
+  en: {pageTitle:'Sales Manager Overview', add:'Add Manager', totalManagers:'Total managers', totalOrders:'Total orders',
+       totalRevenue:'Total revenue', avgRevenue:'Avg revenue/manager', reset:'Reset', managerId:'Manager ID', name:'Name',
+       region:'Region', orders:'Orders', revenue:'Revenue (EUR)', performance:'Performance', close:'Close',
+       email:'Email', phone:'Phone', search:'Search'},
+  de: {pageTitle:'Übersicht der Vertriebsleiter', add:'Neuen Vertriebsleiter hinzufügen', totalManagers:'Gesamtleiter',
+       totalOrders:'Gesamtaufträge', totalRevenue:'Gesamtumsatz', avgRevenue:'Durchschnittlicher Umsatz/Leiter',
+       reset:'Zurücksetzen', managerId:'Leiter-ID', name:'Name', region:'Region', orders:'Aufträge',
+       revenue:'Umsatz (EUR)', performance:'Leistung', close:'Schließen', email:'E-Mail', phone:'Telefon', search:'Suche'}
+};
+let lang = 'en';
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString(lang==='de'?'de-DE':'en-US');
+
+/* ====== Rendering ====== */
+let sortAsc = true, filterText = '';
+function applyI18n(){
+  $('#pageTitle').textContent = t[lang].pageTitle;
+  $('#addManagerBtn').textContent = t[lang].add;
+  $('#search').placeholder = t[lang].search;
+  document.querySelectorAll('[data-i18n]').forEach(el=> el.textContent = t[lang][el.dataset.i18n]);
+}
+function totals(){
+  const data = managers.filter(m => matchesFilter(m));
+  const orders = data.reduce((s,m)=>s+m.orders,0);
+  const revenue = data.reduce((s,m)=>s+m.revenue,0);
+  $('#mCount').textContent = data.length;
+  $('#mOrders').textContent = fmt(orders);
+  $('#mRevenue').textContent = fmt(revenue);
+  $('#mAvg').textContent = data.length ? fmt(Math.round(revenue/data.length)) : '—';
+}
+function matchesFilter(m){
+  const q = filterText.trim().toLowerCase();
+  if(!q) return true;
+  return [m.id,m.name,m.region,m.performance].some(x=> String(x).toLowerCase().includes(q));
+}
+function render(){
+  const tb = $('#tbl tbody'); tb.innerHTML='';
+  const data = managers
+    .filter(m=>matchesFilter(m))
+    .sort((a,b)=> sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+  data.forEach(m=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${m.id}</td>
+      <td><button class="link" data-id="${m.id}" aria-label="Open details">${m.name}</button></td>
+      <td><span class="tag">${m.region}</span></td>
+      <td class="num">${fmt(m.orders)}</td>
+      <td class="num">${fmt(m.revenue)}</td>
+      <td>${labelPerf(m.performance)}</td>`;
+    tb.appendChild(tr);
+  });
+  // attach click handlers for name links
+  tb.querySelectorAll('button.link').forEach(btn=>{
+    btn.addEventListener('click', () => openDetail(btn.dataset.id));
+  });
+  totals();
+}
+function labelPerf(p){
+  const map = {excellent:{en:'Excellent',de:'Ausgezeichnet'},
+               good:{en:'Good',de:'Gut'},
+               average:{en:'Average',de:'Durchschnittlich'}};
+  return map[p]?.[lang] || p;
+}
+
+/* ====== Detail modal ====== */
+function openDetail(id){
+  const m = managers.find(x=>x.id===id);
+  if(!m) return;
+  $('#dName').textContent = m.name;
+  $('#dId').textContent = m.id;
+  $('#dRegion').textContent = m.region;
+  $('#dOrders').textContent = fmt(m.orders);
+  $('#dRevenue').textContent = fmt(m.revenue);
+  $('#dPerf').textContent = labelPerf(m.performance);
+  $('#dEmail').textContent = m.email;
+  $('#dPhone').textContent = m.phone;
+  $('#detailModal').style.display='flex';
+}
+$('#closeModal').addEventListener('click', ()=> $('#detailModal').style.display='none');
+$('#detailModal').addEventListener('click', (e)=>{ if(e.target.id==='detailModal') $('#detailModal').style.display='none'; });
+
+/* ====== Actions ====== */
+$('#search').addEventListener('input', e=>{ filterText = e.target.value; render(); });
+$('#reset').addEventListener('click', ()=>{ filterText=''; $('#search').value=''; render(); });
+$('#toggleSort').addEventListener('click', ()=>{ sortAsc = !sortAsc; render(); });
+$('#addManagerBtn').addEventListener('click', ()=> alert(lang==='de' ? 'Neuen Vertriebsleiter hinzufügen (Demo)' : 'Add Manager (demo)'));
+$('#editBtn').addEventListener('click', ()=> alert(lang==='de' ? 'Bearbeiten (Demo)' : 'Edit (demo)'));
+$('#exportCsv').addEventListener('click', exportCSV);
+$('#exportJson').addEventListener('click', ()=>download('managers.json', JSON.stringify(managers, null, 2)));
+
+function exportCSV(){
+  const hdr = ['id','name','region','orders','revenue','performance','email','phone'];
+  const rows = [hdr.join(',')].concat(managers.map(m=> hdr.map(k=>`"${String(m[k]).replace(/"/g,'""')}"`).join(',')));
+  download('managers.csv', rows.join('\n'));
+}
+function download(filename, text){
+  const blob = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ====== Language ====== */
+function setLang(newLang){
+  lang = newLang;
+  applyI18n();
+  render();
+}
+document.getElementById('langSel').addEventListener('change', e=> setLang(e.target.value));
+
+/* init */
+applyI18n();
+render();
+</script>
+</body>
+</html>
