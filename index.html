@@ -8,7 +8,6 @@
   <meta name="color-scheme" content="light dark" />
   <style>
     :root {
-      /* Light-Standard */
       --bg-gradient-1: 255, 99, 132;
       --bg-gradient-2: 54, 162, 235;
       --bg-gradient-3: 75, 192, 192;
@@ -19,7 +18,6 @@
       --radius: 16px;
       --shadow: 0 10px 30px rgba(0,0,0,.08), 0 2px 10px rgba(0,0,0,.04);
     }
-    /* Dark-Override per Attribut */
     html[data-theme="dark"]{
       --surface: 17, 24, 39;
       --text: 241, 245, 249;
@@ -27,7 +25,6 @@
       --primary: 96, 165, 250;
       --shadow: 0 10px 30px rgba(0,0,0,.35), 0 2px 10px rgba(0,0,0,.2);
     }
-
     *, *::before, *::after { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
@@ -44,7 +41,6 @@
       padding: clamp(16px, 4vw, 48px);
       transition: background-color .25s ease, color .25s ease;
     }
-
     .card {
       width: min(720px, 100%);
       background: rgba(var(--surface), .75);
@@ -55,25 +51,23 @@
       overflow: hidden;
       transition: background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
-
     .stripe {
       height: 6px;
       background: linear-gradient(90deg,rgba(54, 162, 235, 1), rgba(138, 43, 226, 1));
     }
-
     .content { padding: clamp(20px, 4vw, 40px); position: relative; }
-
-    /* Theme-Schalter */
-    .theme-toggle{
+    .toggles {
       position: absolute; top: 16px; right: 16px;
+      display: flex; gap: 8px;
+    }
+    .toggle-btn{
       appearance: none; border: 1px solid rgba(0,0,0,.08);
       background: rgba(var(--surface), .9); color: rgb(var(--text));
       border-radius: 999px; padding: 8px 12px; font-weight: 600; font-size: 13px;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
       box-shadow: 0 6px 16px rgba(0,0,0,.08);
     }
-    html[data-theme="dark"] .theme-toggle{ border-color: rgba(255,255,255,.15); }
-
+    html[data-theme="dark"] .toggle-btn{ border-color: rgba(255,255,255,.15); }
     .logo {
       display: inline-flex; align-items: center; gap: 12px;
       font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; letter-spacing: .2px; margin-bottom: 20px;
@@ -84,12 +78,9 @@
       display: grid; place-items: center; box-shadow: 0 6px 16px rgba(0,0,0,.12);
     }
     .logo-icon svg { width: 20px; height: 20px; fill: white; opacity: .95; }
-
     h1 { margin: 0 0 10px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; }
     p  { margin: 0 0 20px; font-size: clamp(16px, 2.5vw, 18px); line-height: 1.6; color: rgb(var(--muted)); }
-
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-
     .btn{
       appearance: none; border: none; cursor: pointer; border-radius: 999px;
       padding: 12px 18px; font-weight: 600; background: rgba(var(--primary), 1); color: #fff;
@@ -99,10 +90,8 @@
     }
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
-
     .meta { margin-top: 24px; display: grid; gap: 8px; font-size: 14px; color: rgb(var(--muted)); }
     footer { margin-top: 28px; font-size: 13px; color: rgb(var(--muted)); }
-
     @media (prefers-reduced-motion: no-preference) {
       .floaty { animation: float 8s ease-in-out infinite; }
       @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
@@ -113,64 +102,97 @@
   <main class="card" role="main" aria-labelledby="headline">
     <div class="stripe" aria-hidden="true"></div>
     <div class="content">
-      <!-- Theme-Schalter -->
-      <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" aria-label="Dark Mode umschalten">
-        🌞 Light
-      </button>
-
-      <div class="logo" aria-label="Logo">
-        <span class="logo-icon floaty" aria-hidden="true">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7zm3-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7zM9 9h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2zm0 4h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2z"/>
-          </svg>
+      <div class="toggles">
+        <button class="toggle-btn" id="themeToggle" type="button" aria-pressed="false">🌞 Light</button>
+        <button class="toggle-btn" id="langToggle" type="button">DE</button>
+      </div>
+      <div class="logo">
+        <span class="logo-icon floaty">
+          <svg viewBox="0 0 24 24"><path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7zm3-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7zM9 9h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2zm0 4h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2z"/></svg>
         </span>
-        <span>Ihre Anwendung</span>
+        <span id="appName">Ihre Anwendung</span>
       </div>
-
       <h1 id="headline">Kommt bald.</h1>
-      <p>Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein.
-        Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.</p>
-
+      <p id="desc">Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.</p>
       <div class="actions">
-        <a class="btn" href="mailto:support@example.com?subject=Frage%20zur%20Anwendung">Support kontaktieren</a>
+        <a class="btn" id="supportBtn" href="mailto:support@example.com?subject=Frage%20zur%20Anwendung">Support kontaktieren</a>
       </div>
-
-      <div class="meta" aria-live="polite">
-        <div><strong>Status:</strong> Vorbereitung des Launches</div>
-        <div><strong>Letzte Aktualisierung:</strong> <span id="date">–</span></div>
+      <div class="meta">
+        <div><strong id="statusLabel">Status:</strong> <span id="statusText">Vorbereitung des Launches</span></div>
+        <div><strong id="updateLabel">Letzte Aktualisierung:</strong> <span id="date">–</span></div>
       </div>
-
-      <footer>© <span id="year"></span> – Platzhalterseite. Alle Rechte vorbehalten.</footer>
+      <footer>© <span id="year"></span> – <span id="footerText">Platzhalterseite. Alle Rechte vorbehalten.</span></footer>
     </div>
   </main>
-
   <script>
     (function(){
-      // initial: gespeichertes Theme oder "light"
-      var saved = localStorage.getItem('theme') || 'light';
-      document.documentElement.setAttribute('data-theme', saved);
-      updateToggle(saved);
-
-      // Datum + Jahr
+      const translations = {
+        de: {
+          appName: "Ihre Anwendung",
+          headline: "Kommt bald.",
+          desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
+          support: "Support kontaktieren",
+          statusLabel: "Status:",
+          statusText: "Vorbereitung des Launches",
+          updateLabel: "Letzte Aktualisierung:",
+          footer: "Platzhalterseite. Alle Rechte vorbehalten.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark"
+        },
+        en: {
+          appName: "Your Application",
+          headline: "Coming soon.",
+          desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
+          support: "Contact Support",
+          statusLabel: "Status:",
+          statusText: "Preparing the launch",
+          updateLabel: "Last update:",
+          footer: "Placeholder page. All rights reserved.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark"
+        }
+      };
+      var savedTheme = localStorage.getItem('theme') || 'light';
+      var savedLang = localStorage.getItem('lang') || 'de';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      setLanguage(savedLang);
+      updateThemeToggle(savedTheme);
       var d = new Date();
       document.getElementById('year').textContent = d.getFullYear();
-      document.getElementById('date').textContent = d.toLocaleDateString('de-DE', { year:'numeric', month:'long', day:'2-digit' });
-
-      // Toggle-Handler
+      document.getElementById('date').textContent = d.toLocaleDateString(savedLang === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
       document.getElementById('themeToggle').addEventListener('click', function(){
         var current = document.documentElement.getAttribute('data-theme') || 'light';
         var next = current === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem('theme', next);
-        updateToggle(next);
+        updateThemeToggle(next);
       });
-
-      function updateToggle(mode){
+      document.getElementById('langToggle').addEventListener('click', function(){
+        var current = localStorage.getItem('lang') || 'de';
+        var next = current === 'de' ? 'en' : 'de';
+        localStorage.setItem('lang', next);
+        setLanguage(next);
+        document.getElementById('date').textContent = d.toLocaleDateString(next === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
+      });
+      function updateThemeToggle(mode){
         var btn = document.getElementById('themeToggle');
         var isDark = mode === 'dark';
         btn.setAttribute('aria-pressed', String(isDark));
-        btn.textContent = isDark ? '🌙 Dark' : '🌞 Light';
-        btn.ariaLabel = isDark ? 'Light Mode umschalten' : 'Dark Mode umschalten';
+        var lang = localStorage.getItem('lang') || 'de';
+        btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
+      }
+      function setLanguage(lang){
+        const t = translations[lang];
+        document.getElementById('appName').textContent = t.appName;
+        document.getElementById('headline').textContent = t.headline;
+        document.getElementById('desc').textContent = t.desc;
+        document.getElementById('supportBtn').textContent = t.support;
+        document.getElementById('statusLabel').textContent = t.statusLabel;
+        document.getElementById('statusText').textContent = t.statusText;
+        document.getElementById('updateLabel').textContent = t.updateLabel;
+        document.getElementById('footerText').textContent = t.footer;
+        document.getElementById('langToggle').textContent = lang.toUpperCase();
+        updateThemeToggle(document.documentElement.getAttribute('data-theme'));
       }
     })();
   </script>
