@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!-- saved from url=(0146)file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-60113BF9-C790-4835-BCE8-BF9A9B0DDDE9/finanzbelege_pruefen.html -->
+<html lang="de" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finanzbelege prüfen</title>
+  <style>
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2');
+      font-weight: normal;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Bold.woff2') format('woff2');
+      font-weight: bold;
+    }
+
+    :root {
+      --toolbar-perc: 100;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --border: rgba(15,23,42,0.15);
+      --accent: #0a6ed1;
+      --accent-hover: #0854a0;
+      --positive: #107e3e;
+      --negative: #c91f1f;
+    }
+
+    body {
+      margin: 0;
+      font-family: '72', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+
+    .note {
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .slider-container {
+      padding: 8px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      width: calc(var(--toolbar-perc) * 1%);
+      overflow: hidden;
+      transition: width 0.2s ease;
+    }
+
+    .toolbar.footer {
+      position: sticky;
+      bottom: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: none;
+      z-index: 5;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1 1 auto;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 6px 30px 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+    .search-box .icon {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      pointer-events: none;
+      color: var(--text-secondary);
+    }
+
+    .icon {
+      font-family: 'SAP-icons';
+      font-style: normal;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .icon:hover {
+      background: var(--bg);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-family: '72', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-reset { background: var(--accent); color: #fff; }
+    .btn-reset:hover { background: var(--accent-hover); }
+    .btn-accept { background: var(--positive); color: #fff; }
+    .btn-accept:hover { filter: brightness(0.9); }
+    .btn-reject { background: var(--negative); color: #fff; }
+    .btn-reject:hover { filter: brightness(0.9); }
+
+    .table-wrapper { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      font-weight: bold;
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tr:hover td {
+      background: rgba(0,0,0,0.02);
+    }
+    .document {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .status-open { color: var(--accent); }
+    .status-posted { color: var(--positive); }
+    .status-cancelled { color: var(--negative); }
+
+    .footer-right {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Filter popover */
+    .filter-popover {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 4px;
+      padding: 8px;
+      z-index: 10;
+      width: 220px;
+      display: none;
+    }
+    .filter-popover label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    .filter-popover input[type="checkbox"] {
+      margin-right: 4px;
+    }
+    .filter-actions {
+      margin-top: 8px;
+      text-align: right;
+    }
+    .filter-actions button {
+      margin-left: 8px;
+      padding: 4px 8px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="note">
+    Verwenden Sie diesen Schieberegler, um die Toolbar zu verkleinern und ihr Overflow‑Verhalten zu beobachten. Die Icon‑Buttons
+    zeigen nur dann Text, wenn sie im Overflow erscheinen.
+  </div>
+  <div class="slider-container">
+    <input type="range" id="toolbarSlider" min="40" max="100" value="100">
+  </div>
+  <!-- Obere Toolbar -->
+  <div class="toolbar" id="topToolbar">
+    <div class="search-box">
+      <input type="search" id="searchInput" placeholder="Search">
+      <span class="icon"></span>
+    </div>
+    <button class="btn btn-reset" id="resetBtn">Reset</button>
+    <span class="icon" id="sortIcon" title="Sortierung aufsteigend"></span>
+    <span class="icon" id="filterIcon" title="Filter"></span>
+    <!-- Filter popover -->
+    <div class="filter-popover" id="filterPopover">
+      <label><input type="checkbox" value="open" checked="">Offen</label>
+      <label><input type="checkbox" value="posted" checked="">Gebucht</label>
+      <label><input type="checkbox" value="cancelled" checked="">Storniert</label>
+      <div class="filter-actions">
+        <button id="applyFilter" class="btn">Anwenden</button>
+        <button id="clearFilter" class="btn">Alle auswählen</button>
+      </div>
+    </div>
+  </div>
+  <!-- Tabelle mit Finanzbelegen -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Beleg</th>
+          <th>Beschreibung</th>
+          <th>Betrag</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"><tr><td><span class="document">FB-1001</span></td><td>Rechnung Lieferant A</td><td style="text-align: right;">1.234,00 EUR</td><td class="status-open">Offen</td></tr><tr><td><span class="document">FB-1002</span></td><td>Gutschrift Kunde X</td><td style="text-align: right;">–450,00 EUR</td><td class="status-posted">Gebucht</td></tr><tr><td><span class="document">FB-1003</span></td><td>Rechnung Lieferant B</td><td style="text-align: right;">987,00 EUR</td><td class="status-posted">Gebucht</td></tr><tr><td><span class="document">FB-1004</span></td><td>Stornobeleg Lieferung 123</td><td style="text-align: right;">–987,00 EUR</td><td class="status-cancelled">Storniert</td></tr><tr><td><span class="document">FB-1005</span></td><td>Rechnung Lieferant C</td><td style="text-align: right;">2.500,00 EUR</td><td class="status-open">Offen</td></tr><tr><td><span class="document">FB-1006</span></td><td>Zahlungseingang Kunde Y</td><td style="text-align: right;">–1.234,00 EUR</td><td class="status-posted">Gebucht</td></tr><tr><td><span class="document">FB-1007</span></td><td>Rechnung Lieferant D</td><td style="text-align: right;">3.800,00 EUR</td><td class="status-open">Offen</td></tr><tr><td><span class="document">FB-1008</span></td><td>Stornobeleg Kunde Z</td><td style="text-align: right;">–2.300,00 EUR</td><td class="status-cancelled">Storniert</td></tr></tbody>
+    </table>
+  </div>
+  <!-- Fußzeile -->
+  <div class="toolbar footer">
+    <button class="btn btn-accept">Accept</button>
+    <button class="btn btn-reject">Reject</button>
+    <div class="footer-right">
+      <span class="icon" title="Edit"></span>
+      <span class="icon" title="Add"></span>
+      <span class="icon" title="Favorite"></span>
+      <span class="icon" title="Sort"></span>
+    </div>
+  </div>
+
+<script>
+// Steuerung der Breite der Toolbar
+const slider = document.getElementById('toolbarSlider');
+slider.addEventListener('input', function() {
+  document.documentElement.style.setProperty('--toolbar-perc', this.value);
+});
+
+// Beispiel‑Finanzbelege
+const documents = [
+  { id:'FB-1001', desc:'Rechnung Lieferant A', amount: '1.234,00 EUR', status:'open' },
+  { id:'FB-1002', desc:'Gutschrift Kunde X', amount: '–450,00 EUR', status:'posted' },
+  { id:'FB-1003', desc:'Rechnung Lieferant B', amount: '987,00 EUR', status:'posted' },
+  { id:'FB-1004', desc:'Stornobeleg Lieferung 123', amount: '–987,00 EUR', status:'cancelled' },
+  { id:'FB-1005', desc:'Rechnung Lieferant C', amount: '2.500,00 EUR', status:'open' },
+  { id:'FB-1006', desc:'Zahlungseingang Kunde Y', amount: '–1.234,00 EUR', status:'posted' },
+  { id:'FB-1007', desc:'Rechnung Lieferant D', amount: '3.800,00 EUR', status:'open' },
+  { id:'FB-1008', desc:'Stornobeleg Kunde Z', amount: '–2.300,00 EUR', status:'cancelled' }
+];
+let filteredStatus = ['open','posted','cancelled'];
+let sortAsc = true;
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  // get search value
+  const searchVal = document.getElementById('searchInput').value.toLowerCase();
+  const rows = documents
+    .filter(doc => filteredStatus.includes(doc.status))
+    .filter(doc => doc.id.toLowerCase().includes(searchVal) || doc.desc.toLowerCase().includes(searchVal))
+    .sort((a,b) => {
+      if (sortAsc) return a.id.localeCompare(b.id);
+      return b.id.localeCompare(a.id);
+    });
+  rows.forEach(doc => {
+    const tr = document.createElement('tr');
+    const tdBeleg = document.createElement('td');
+    tdBeleg.innerHTML = `<span class="document">${doc.id}</span>`;
+    const tdDesc = document.createElement('td');
+    tdDesc.textContent = doc.desc;
+    const tdAmount = document.createElement('td');
+    tdAmount.style.textAlign = 'right';
+    tdAmount.textContent = doc.amount;
+    const tdStatus = document.createElement('td');
+    tdStatus.textContent = doc.status === 'open' ? 'Offen' : doc.status === 'posted' ? 'Gebucht' : 'Storniert';
+    tdStatus.className = 'status-' + doc.status;
+    tr.appendChild(tdBeleg);
+    tr.appendChild(tdDesc);
+    tr.appendChild(tdAmount);
+    tr.appendChild(tdStatus);
+    tbody.appendChild(tr);
+  });
+}
+
+renderTable();
+
+// Suche
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', renderTable);
+
+// Sortierung umschalten
+const sortIcon = document.getElementById('sortIcon');
+sortIcon.addEventListener('click', () => {
+  sortAsc = !sortAsc;
+  renderTable();
+});
+
+// Filterpopover
+const filterIcon = document.getElementById('filterIcon');
+const filterPopover = document.getElementById('filterPopover');
+filterIcon.addEventListener('click', (e) => {
+  e.stopPropagation();
+  filterPopover.style.display = filterPopover.style.display === 'block' ? 'none' : 'block';
+});
+// close popover on click outside
+window.addEventListener('click', () => {
+  filterPopover.style.display = 'none';
+});
+filterPopover.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
+// Apply filter
+document.getElementById('applyFilter').addEventListener('click', () => {
+  const checks = filterPopover.querySelectorAll('input[type="checkbox"]');
+  filteredStatus = Array.from(checks).filter(ch => ch.checked).map(ch => ch.value);
+  renderTable();
+  filterPopover.style.display = 'none';
+});
+// Clear filter (select all)
+document.getElementById('clearFilter').addEventListener('click', () => {
+  const checks = filterPopover.querySelectorAll('input[type="checkbox"]');
+  checks.forEach(ch => ch.checked = true);
+  filteredStatus = ['open','posted','cancelled'];
+  renderTable();
+});
+
+// Reset button resets search and filter and sort
+const resetBtn = document.getElementById('resetBtn');
+resetBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  sortAsc = true;
+  const checks = filterPopover.querySelectorAll('input[type="checkbox"]');
+  checks.forEach(ch => ch.checked = true);
+  filteredStatus = ['open','posted','cancelled'];
+  renderTable();
+});
+</script>
+
+
+</body></html>
