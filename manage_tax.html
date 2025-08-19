@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!-- saved from url=(0143)file:///private/var/folders/fj/r8_xmwqn0419dk68l8c9nk8r0000gp/T/remote-file-preview-558EA5B8-3CAA-4FA7-918B-4C8FD20DF34E/steuern_verwalten.html -->
+<html lang="de" data-theme="light" style="--toolbar-perc: 100;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steuern verwalten</title>
+  <style>
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Regular.woff2') format('woff2');
+      font-weight: normal;
+    }
+    @font-face {
+      font-family: '72';
+      src: url('https://ui5.sap.com/resources/sap/ui/core/themes/base/fonts/72-Bold.woff2') format('woff2');
+      font-weight: bold;
+    }
+    :root {
+      --toolbar-perc: 100;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --border: rgba(15,23,42,0.15);
+      --accent: #0a6ed1;
+      --accent-hover: #0854a0;
+      --positive: #107e3e;
+      --negative: #c91f1f;
+    }
+    body { margin: 0; font-family: '72', sans-serif; background: var(--bg); color: var(--text-primary); }
+    .note { padding: 8px 16px; font-size: 12px; color: var(--text-secondary); background: var(--surface); border-bottom: 1px solid var(--border); }
+    .slider-container { padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+    input[type="range"] { width: 100%; }
+    .toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--surface); border-bottom: 1px solid var(--border); width: calc(var(--toolbar-perc) * 1%); overflow: hidden; transition: width 0.2s ease; }
+    .toolbar.footer { position: sticky; bottom: 0; border-top: 1px solid var(--border); border-bottom: none; z-index: 5; }
+    .search-box { position: relative; flex: 1 1 auto; }
+    .search-box input { width: 100%; padding: 6px 30px 6px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); }
+    .search-box .icon { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; color: var(--text-secondary); }
+    .icon { font-family: 'SAP-icons'; font-style: normal; font-size: 18px; line-height: 1; cursor: pointer; padding: 4px; border-radius: 4px; }
+    .icon:hover { background: var(--bg); }
+    .btn { border: none; border-radius: 4px; padding: 6px 12px; font-family: '72', sans-serif; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+    .btn-reset { background: var(--accent); color: #fff; }
+    .btn-reset:hover { background: var(--accent-hover); }
+    .btn-accept { background: var(--positive); color: #fff; }
+    .btn-accept:hover { filter: brightness(0.9); }
+    .btn-reject { background: var(--negative); color: #fff; }
+    .btn-reject:hover { filter: brightness(0.9); }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 14px; }
+    th { font-weight: bold; background: var(--surface); position: sticky; top: 0; z-index: 2; }
+    tr:hover td { background: rgba(0,0,0,0.02); }
+    .tax-type { color: var(--accent); font-weight: 600; }
+    .status-open { color: var(--accent); }
+    .status-paid { color: var(--positive); }
+    .filter-popover { position: absolute; top: 100%; right: 0; margin-top: 4px; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px; padding: 8px; z-index: 10; width: 220px; display: none; }
+    .filter-popover label { display: block; margin-bottom: 4px; font-size: 13px; }
+    .filter-popover input[type="checkbox"] { margin-right: 4px; }
+    .filter-actions { margin-top: 8px; text-align: right; }
+    .filter-actions button { margin-left: 8px; padding: 4px 8px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="note">Verwenden Sie diesen Schieberegler, um die Toolbar zu verkleinern und ihr Overflow‑Verhalten zu beobachten. Die Icon‑Buttons zeigen nur dann Text, wenn sie im Overflow erscheinen.</div>
+  <div class="slider-container">
+    <input type="range" id="toolbarSlider" min="40" max="100" value="100">
+  </div>
+  <div class="toolbar" id="topToolbar">
+    <div class="search-box">
+      <input type="search" id="searchInput" placeholder="Search">
+      <span class="icon"></span>
+    </div>
+    <button class="btn btn-reset" id="resetBtn">Reset</button>
+    <span class="icon" id="sortIcon" title="Sortierung aufsteigend"></span>
+    <span class="icon" id="filterIcon" title="Filter"></span>
+    <div class="filter-popover" id="filterPopover" style="display: none;">
+      <label><input type="checkbox" value="open" checked="">Offen</label>
+      <label><input type="checkbox" value="paid" checked="">Bezahlt</label>
+      <div class="filter-actions">
+        <button id="applyFilter" class="btn">Anwenden</button>
+        <button id="clearFilter" class="btn">Alle auswählen</button>
+      </div>
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Steuerart</th>
+          <th>Beschreibung</th>
+          <th>Betrag</th>
+          <th>Fällig</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"><tr><td><span class="tax-type">Gewerbesteuer</span></td><td>Gewerbesteuer 2024</td><td style="text-align: right;">9.800,00 EUR</td><td>15.11.2025</td><td class="status-open">Offen</td></tr><tr><td><span class="tax-type">Körperschaftsteuer</span></td><td>Körperschaftsteuer 2024</td><td style="text-align: right;">25.000,00 EUR</td><td>30.09.2025</td><td class="status-open">Offen</td></tr><tr><td><span class="tax-type">Lohnsteuer</span></td><td>Monatliche Lohnsteuer März</td><td style="text-align: right;">8.500,00 EUR</td><td>10.04.2025</td><td class="status-paid">Bezahlt</td></tr><tr><td><span class="tax-type">Solidaritätszuschlag</span></td><td>Solidaritätszuschlag 2024</td><td style="text-align: right;">1.200,00 EUR</td><td>30.09.2025</td><td class="status-paid">Bezahlt</td></tr><tr><td><span class="tax-type">Umsatzsteuer</span></td><td>Quartalsvoranmeldung Q1</td><td style="text-align: right;">12.000,00 EUR</td><td>15.04.2025</td><td class="status-open">Offen</td></tr><tr><td><span class="tax-type">Umsatzsteuer</span></td><td>Quartalsvoranmeldung Q2</td><td style="text-align: right;">10.500,00 EUR</td><td>15.07.2025</td><td class="status-open">Offen</td></tr></tbody>
+    </table>
+  </div>
+  <div class="toolbar footer">
+    <button class="btn btn-accept">Accept</button>
+    <button class="btn btn-reject">Reject</button>
+  </div>
+
+<script>
+const slider = document.getElementById('toolbarSlider');
+slider.addEventListener('input', function() {
+  document.documentElement.style.setProperty('--toolbar-perc', this.value);
+});
+
+const taxes = [
+  { type:'Umsatzsteuer', desc:'Quartalsvoranmeldung Q1', amount:'12.000,00 EUR', due:'15.04.2025', status:'open' },
+  { type:'Lohnsteuer', desc:'Monatliche Lohnsteuer März', amount:'8.500,00 EUR', due:'10.04.2025', status:'paid' },
+  { type:'Körperschaftsteuer', desc:'Körperschaftsteuer 2024', amount:'25.000,00 EUR', due:'30.09.2025', status:'open' },
+  { type:'Gewerbesteuer', desc:'Gewerbesteuer 2024', amount:'9.800,00 EUR', due:'15.11.2025', status:'open' },
+  { type:'Solidaritätszuschlag', desc:'Solidaritätszuschlag 2024', amount:'1.200,00 EUR', due:'30.09.2025', status:'paid' },
+  { type:'Umsatzsteuer', desc:'Quartalsvoranmeldung Q2', amount:'10.500,00 EUR', due:'15.07.2025', status:'open' }
+];
+let filteredStatus = ['open','paid'];
+let sortAsc = true;
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  const searchVal = document.getElementById('searchInput').value.toLowerCase();
+  const rows = taxes
+    .filter(t => filteredStatus.includes(t.status))
+    .filter(t => t.type.toLowerCase().includes(searchVal) || t.desc.toLowerCase().includes(searchVal))
+    .sort((a,b) => {
+      const comp = a.type.localeCompare(b.type);
+      return sortAsc ? comp : -comp;
+    });
+  rows.forEach(t => {
+    const tr = document.createElement('tr');
+    const tdType = document.createElement('td');
+    tdType.innerHTML = `<span class="tax-type">${t.type}</span>`;
+    const tdDesc = document.createElement('td');
+    tdDesc.textContent = t.desc;
+    const tdAmount = document.createElement('td');
+    tdAmount.style.textAlign = 'right';
+    tdAmount.textContent = t.amount;
+    const tdDue = document.createElement('td');
+    tdDue.textContent = t.due;
+    const tdStatus = document.createElement('td');
+    tdStatus.textContent = t.status === 'open' ? 'Offen' : 'Bezahlt';
+    tdStatus.className = 'status-' + (t.status === 'open' ? 'open' : 'paid');
+    tr.appendChild(tdType);
+    tr.appendChild(tdDesc);
+    tr.appendChild(tdAmount);
+    tr.appendChild(tdDue);
+    tr.appendChild(tdStatus);
+    tbody.appendChild(tr);
+  });
+}
+
+renderTable();
+
+document.getElementById('searchInput').addEventListener('input', renderTable);
+
+document.getElementById('sortIcon').addEventListener('click', () => {
+  sortAsc = !sortAsc;
+  renderTable();
+});
+
+const filterIcon = document.getElementById('filterIcon');
+const filterPopover = document.getElementById('filterPopover');
+filterIcon.addEventListener('click', (e) => {
+  e.stopPropagation();
+  filterPopover.style.display = filterPopover.style.display === 'block' ? 'none' : 'block';
+});
+window.addEventListener('click', () => {
+  filterPopover.style.display = 'none';
+});
+filterPopover.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
+document.getElementById('applyFilter').addEventListener('click', () => {
+  const checks = filterPopover.querySelectorAll('input[type="checkbox"]');
+  filteredStatus = Array.from(checks).filter(ch => ch.checked).map(ch => ch.value);
+  renderTable();
+  filterPopover.style.display = 'none';
+});
+document.getElementById('clearFilter').addEventListener('click', () => {
+  const checks = filterPopover.querySelectorAll('input[type="checkbox"]');
+  checks.forEach(ch => ch.checked = true);
+  filteredStatus = ['open','paid'];
+  renderTable();
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('searchInput').value = '';
+  sortAsc = true;
+  const checks = filterPopover.querySelectorAll('input[type="checkbox"]');
+  checks.forEach(ch => ch.checked = true);
+  filteredStatus = ['open','paid'];
+  renderTable();
+});
+</script>
+
+
+</body></html>
