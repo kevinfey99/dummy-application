@@ -47,9 +47,15 @@
       overflow: hidden;
       transition: background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
-    .stripe { height: 6px; background: linear-gradient(90deg,rgba(54,162,235,1), rgba(138,43,226,1)); }
+    .stripe {
+      height: 6px;
+      background: linear-gradient(90deg,rgba(54, 162, 235, 1), rgba(138, 43, 226, 1));
+    }
     .content { padding: clamp(20px, 4vw, 40px); position: relative; }
-    .toggles { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
+    .toggles {
+      position: absolute; top: 16px; right: 16px;
+      display: flex; gap: 8px;
+    }
     .toggle-btn{
       appearance: none; border: 1px solid rgba(0,0,0,.08);
       background: rgba(var(--surface), .9); color: rgb(var(--text));
@@ -58,7 +64,10 @@
       box-shadow: 0 6px 16px rgba(0,0,0,.08);
     }
     html[data-theme="dark"] .toggle-btn{ border-color: rgba(255,255,255,.15); }
-    .logo { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; letter-spacing: .2px; margin-bottom: 20px; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; letter-spacing: .2px; margin-bottom: 20px;
+    }
     .logo-icon {
       width: 36px; height: 36px; border-radius: 10px;
       background: linear-gradient(135deg, rgba(var(--bg-gradient-2), 1), rgba(var(--bg-gradient-3), 1));
@@ -112,70 +121,76 @@
     </div>
   </main>
   <script>
-(function() {
-  const translations = {
-    de: { /* … Texte wie bisher … */ },
-    en: { /* … Texte wie bisher … */ }
-  };
-
-  // Bestimme die Sprache anhand (1) localStorage, (2) URL (sap-language), (3) UI5-API, (4) Browser
-  function detectLanguage() {
-    // 1) vom Schalter gespeichert?
-    const stored = localStorage.getItem('lang');
-    if (stored && translations[stored]) return stored;
-
-    // 2) aus der URL (sap-language)
-    const params = new URLSearchParams(window.location.search);
-    let langParam = params.get('sap-language') || params.get('lang') || params.get('locale');
-    if (!langParam) {
-      // evtl. in hash, falls Work Zone das dort einbettet
-      const hashParams = new URLSearchParams(window.location.hash.slice(1));
-      langParam = hashParams.get('sap-language');
-    }
-    if (langParam) {
-      const base = langParam.toLowerCase().split(/[-_]/)[0];
-      if (translations[base]) return base;
-    }
-
-    // 3) UI5-API (falls vorhanden)
-    try {
-      if (window.sap && sap.ui && sap.ui.getCore) {
-        const ui5Lang = sap.ui.getCore().getConfiguration().getLanguage().toLowerCase().split(/[-_]/)[0];
-        if (translations[ui5Lang]) return ui5Lang;
+    (function(){
+      const translations = {
+        de: {
+          appName: "Ihre Anwendung",
+          headline: "Kommt bald.",
+          desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
+          support: "Support kontaktieren",
+          statusLabel: "Status:",
+          statusText: "Vorbereitung des Launches",
+          updateLabel: "Letzte Aktualisierung:",
+          footer: "Platzhalterseite. Alle Rechte vorbehalten.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark"
+        },
+        en: {
+          appName: "Your Application",
+          headline: "Coming soon.",
+          desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
+          support: "Contact Support",
+          statusLabel: "Status:",
+          statusText: "Preparing the launch",
+          updateLabel: "Last update:",
+          footer: "Placeholder page. All rights reserved.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark"
+        }
+      };
+      var savedTheme = localStorage.getItem('theme') || 'light';
+      var savedLang = localStorage.getItem('lang') || 'de';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      setLanguage(savedLang);
+      updateThemeToggle(savedTheme);
+      var d = new Date();
+      document.getElementById('year').textContent = d.getFullYear();
+      document.getElementById('date').textContent = d.toLocaleDateString(savedLang === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
+      document.getElementById('themeToggle').addEventListener('click', function(){
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        var next = current === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateThemeToggle(next);
+      });
+      document.getElementById('langToggle').addEventListener('click', function(){
+        var current = localStorage.getItem('lang') || 'de';
+        var next = current === 'de' ? 'en' : 'de';
+        localStorage.setItem('lang', next);
+        setLanguage(next);
+        document.getElementById('date').textContent = d.toLocaleDateString(next === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
+      });
+      function updateThemeToggle(mode){
+        var btn = document.getElementById('themeToggle');
+        var isDark = mode === 'dark';
+        btn.setAttribute('aria-pressed', String(isDark));
+        var lang = localStorage.getItem('lang') || 'de';
+        btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
       }
-    } catch (err) {
-      /* API nicht verfügbar oder gescheitert */
-    }
-
-    // 4) Browser-Sprache
-    const browserLang = (navigator.language || '').toLowerCase().split(/[-_]/)[0];
-    return translations[browserLang] ? browserLang : 'de';
-  }
-
-  // Setze Texte gemäß Sprache
-  function setLanguage(lang) {
-    const t = translations[lang];
-    // Hier alle Texte setzen (appName, headline, desc, etc.)
-    document.getElementById('appName').textContent = t.appName;
-    document.getElementById('headline').textContent = t.headline;
-    // …
-    // Schalter-Label aktualisieren
-    document.getElementById('langToggle').textContent = lang === 'de' ? 'DE' : 'EN';
-  }
-
-  // Sprache initial setzen
-  let currentLang = detectLanguage();
-  setLanguage(currentLang);
-
-  // Schalter für manuelles Wechseln
-  document.getElementById('langToggle').addEventListener('click', () => {
-    currentLang = currentLang === 'de' ? 'en' : 'de';
-    localStorage.setItem('lang', currentLang);
-    setLanguage(currentLang);
-  });
-
-  // Optional: Theme-Toggle bleibt wie gehabt
-})();
-</script>
+      function setLanguage(lang){
+        const t = translations[lang];
+        document.getElementById('appName').textContent = t.appName;
+        document.getElementById('headline').textContent = t.headline;
+        document.getElementById('desc').textContent = t.desc;
+        document.getElementById('supportBtn').textContent = t.support;
+        document.getElementById('statusLabel').textContent = t.statusLabel;
+        document.getElementById('statusText').textContent = t.statusText;
+        document.getElementById('updateLabel').textContent = t.updateLabel;
+        document.getElementById('footerText').textContent = t.footer;
+        document.getElementById('langToggle').textContent = lang.toUpperCase();
+        updateThemeToggle(document.documentElement.getAttribute('data-theme'));
+      }
+    })();
+  </script>
 </body>
 </html>
