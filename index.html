@@ -18,7 +18,7 @@
       --radius: 16px;
       --shadow: 0 10px 30px rgba(0,0,0,.08), 0 2px 10px rgba(0,0,0,.04);
     }
-    html[data-theme="dark"]{
+    html[data-theme="dark"] {
       --surface: 17, 24, 39;
       --text: 241, 245, 249;
       --muted: 148, 163, 184;
@@ -56,14 +56,14 @@
       position: absolute; top: 16px; right: 16px;
       display: flex; gap: 8px;
     }
-    .toggle-btn{
+    .toggle-btn {
       appearance: none; border: 1px solid rgba(0,0,0,.08);
       background: rgba(var(--surface), .9); color: rgb(var(--text));
       border-radius: 999px; padding: 8px 12px; font-weight: 600; font-size: 13px;
       cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
       box-shadow: 0 6px 16px rgba(0,0,0,.08);
     }
-    html[data-theme="dark"] .toggle-btn{ border-color: rgba(255,255,255,.15); }
+    html[data-theme="dark"] .toggle-btn { border-color: rgba(255,255,255,.15); }
     .logo {
       display: inline-flex; align-items: center; gap: 12px;
       font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; letter-spacing: .2px; margin-bottom: 20px;
@@ -77,7 +77,7 @@
     h1 { margin: 0 0 10px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; }
     p  { margin: 0 0 20px; font-size: clamp(16px, 2.5vw, 18px); line-height: 1.6; color: rgb(var(--muted)); }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-    .btn{
+    .btn {
       appearance: none; border: none; cursor: pointer; border-radius: 999px;
       padding: 12px 18px; font-weight: 600; background: rgba(var(--primary), 1); color: #fff;
       text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
@@ -100,7 +100,6 @@
     <div class="content">
       <div class="toggles">
         <button class="toggle-btn" id="themeToggle" type="button" aria-pressed="false">🌞 Light</button>
-        <button class="toggle-btn" id="langToggle" type="button">DE</button>
       </div>
       <div class="logo">
         <span class="logo-icon floaty">
@@ -120,97 +119,81 @@
       <footer>© <span id="year"></span> – <span id="footerText">Platzhalterseite. Alle Rechte vorbehalten.</span></footer>
     </div>
   </main>
-<script>
-(function(){
-  const translations = {
-    de: {
-      appName: "Ihre Anwendung",
-      headline: "Kommt bald.",
-      desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
-      support: "Support kontaktieren",
-      statusLabel: "Status:",
-      statusText: "Vorbereitung des Launches",
-      updateLabel: "Letzte Aktualisierung:",
-      footer: "Platzhalterseite. Alle Rechte vorbehalten.",
-      themeLight: "🌞 Light",
-      themeDark: "🌙 Dark"
-    },
-    en: {
-      appName: "Your Application",
-      headline: "Coming soon.",
-      desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
-      support: "Contact Support",
-      statusLabel: "Status:",
-      statusText: "Preparing the launch",
-      updateLabel: "Last update:",
-      footer: "Placeholder page. All rights reserved.",
-      themeLight: "🌞 Light",
-      themeDark: "🌙 Dark"
-    }
-  };
+  <script>
+    (function(){
+      const translations = {
+        de: {
+          appName: "Ihre Anwendung",
+          headline: "Kommt bald.",
+          desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
+          support: "Support kontaktieren",
+          statusLabel: "Status:",
+          statusText: "Vorbereitung des Launches",
+          updateLabel: "Letzte Aktualisierung:",
+          footer: "Platzhalterseite. Alle Rechte vorbehalten.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark"
+        },
+        en: {
+          appName: "Your Application",
+          headline: "Coming soon.",
+          desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
+          support: "Contact Support",
+          statusLabel: "Status:",
+          statusText: "Preparing the launch",
+          updateLabel: "Last update:",
+          footer: "Placeholder page. All rights reserved.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark"
+        }
+      };
 
-  // Theme aus localStorage oder Standard auf Light
-  let savedTheme = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
+      // Theme aus localStorage oder Standard auf Light
+      let savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
 
-  // Prüfen, ob HTML-Tag eine Sprache vorgibt (z.B. <html lang="de">)
-  const htmlLang = document.documentElement.getAttribute("lang");
+      // Sprache aus HTML lang oder Browser
+      const htmlLang = document.documentElement.getAttribute("lang");
+      let lang = htmlLang ? htmlLang.toLowerCase() : navigator.language.slice(0, 2);
+      if (!['de', 'en'].includes(lang)) lang = 'de';
 
-  // Sprache aus LocalStorage oder HTML-Tag oder Fallback auf Browser-Sprache
-  let savedLang = localStorage.getItem('lang') 
-    || (htmlLang ? htmlLang.toLowerCase() : navigator.language.slice(0,2));
+      // Inhalte setzen
+      setLanguage(lang);
+      updateThemeToggle(savedTheme);
 
-  // Fallback auf Deutsch, falls nicht "en" oder "de"
-  if (!['de', 'en'].includes(savedLang)) savedLang = 'de';
+      // Datum & Jahr aktualisieren
+      const d = new Date();
+      document.getElementById('year').textContent = d.getFullYear();
+      document.getElementById('date').textContent = d.toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-US', { year:'numeric', month:'long', day:'2-digit' });
 
-  setLanguage(savedLang);
-  updateThemeToggle(savedTheme);
+      // Theme Toggle
+      document.getElementById('themeToggle').addEventListener('click', function(){
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = current === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateThemeToggle(next);
+      });
 
-  // Datum und Jahr setzen
-  const d = new Date();
-  document.getElementById('year').textContent = d.getFullYear();
-  document.getElementById('date').textContent = d.toLocaleDateString(savedLang === 'de' ? 'de-DE' : 'en-US', { year:'numeric', month:'long', day:'2-digit' });
+      function updateThemeToggle(mode){
+        const btn = document.getElementById('themeToggle');
+        const isDark = mode === 'dark';
+        btn.setAttribute('aria-pressed', String(isDark));
+        btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
+      }
 
-  // Theme Toggle
-  document.getElementById('themeToggle').addEventListener('click', function(){
-    const current = document.documentElement.getAttribute('data-theme') || 'light';
-    const next = current === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    updateThemeToggle(next);
-  });
-
-  // Sprach-Toggle
-  document.getElementById('langToggle').addEventListener('click', function(){
-    const current = localStorage.getItem('lang') || savedLang;
-    const next = current === 'de' ? 'en' : 'de';
-    localStorage.setItem('lang', next);
-    setLanguage(next);
-    document.getElementById('date').textContent = d.toLocaleDateString(next === 'de' ? 'de-DE' : 'en-US', { year:'numeric', month:'long', day:'2-digit' });
-  });
-
-  function updateThemeToggle(mode){
-    const btn = document.getElementById('themeToggle');
-    const isDark = mode === 'dark';
-    btn.setAttribute('aria-pressed', String(isDark));
-    const lang = localStorage.getItem('lang') || savedLang;
-    btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
-  }
-
-  function setLanguage(lang){
-    const t = translations[lang];
-    document.getElementById('appName').textContent = t.appName;
-    document.getElementById('headline').textContent = t.headline;
-    document.getElementById('desc').textContent = t.desc;
-    document.getElementById('supportBtn').textContent = t.support;
-    document.getElementById('statusLabel').textContent = t.statusLabel;
-    document.getElementById('statusText').textContent = t.statusText;
-    document.getElementById('updateLabel').textContent = t.updateLabel;
-    document.getElementById('footerText').textContent = t.footer;
-    document.getElementById('langToggle').textContent = lang.toUpperCase();
-    updateThemeToggle(document.documentElement.getAttribute('data-theme'));
-  }
-})();
-</script>
+      function setLanguage(lang){
+        const t = translations[lang];
+        document.getElementById('appName').textContent = t.appName;
+        document.getElementById('headline').textContent = t.headline;
+        document.getElementById('desc').textContent = t.desc;
+        document.getElementById('supportBtn').textContent = t.support;
+        document.getElementById('statusLabel').textContent = t.statusLabel;
+        document.getElementById('statusText').textContent = t.statusText;
+        document.getElementById('updateLabel').textContent = t.updateLabel;
+        document.getElementById('footerText').textContent = t.footer;
+      }
+    })();
+  </script>
 </body>
 </html>
