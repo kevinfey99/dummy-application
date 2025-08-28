@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-theme="light">
+<html lang="de" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,7 +47,7 @@
       overflow: hidden;
       transition: background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
-    .stripe { height: 6px; background: linear-gradient(90deg,rgba(54, 162, 235, 1), rgba(138, 43, 226, 1)); }
+    .stripe { height: 6px; background: linear-gradient(90deg,rgba(54,162,235,1), rgba(138,43,226,1)); }
     .content { padding: clamp(20px, 4vw, 40px); position: relative; }
     .toggles { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
     .toggle-btn{
@@ -113,7 +113,6 @@
 
   <script>
     (function(){
-      // --- Übersetzungen ---
       const translations = {
         de: {
           appName: "Ihre Anwendung",
@@ -144,16 +143,28 @@
       };
       const SUPPORTED = Object.keys(translations);
 
-      // --- Helfer ---
+      // --- Hilfsfunktionen ---
       const normalize = code => {
         if (!code) return null;
         const s = String(code).toLowerCase();
-        const base = s.split(/[_-]/)[0]; // en-US -> en
-        return SUPPORTED.includes(base) ? base : null;
+        const base = s.split(/[_-]/)[0];       // en-US -> en
+        return SUPPORTED.includes(base) ? (s.includes("-") ? s : base) : null;
       };
-      const getLocale = lang => (lang === "de" ? "de-DE" : "en-US");
+      const toBase = code => String(code).toLowerCase().split(/[_-]/)[0];
+      const getLocale = langLike => {
+        if (!langLike) return "de-DE";
+        // Wenn bereits Region enthalten (en-GB, de-CH), so lassen
+        if (langLike.includes("-")) return langLike;
+        // Basis -> Standardregion
+        if (langLike === "de") return "de-DE";
+        if (langLike === "en") return "en-GB"; // europäischer Default
+        return "en-US";
+      };
 
-      // 1) Sprache aus URL (sap-language / lang / locale / language)
+      // 1) Eigene HTML-lang (Work Zone kann es setzen)
+      const fromOwnHtml = normalize(document.documentElement.getAttribute("lang"));
+
+      // 2) URL-Parameter (Work Zone hängt oft sap-language an)
       const url = new URL(window.location.href);
       const fromUrl =
         normalize(url.searchParams.get("sap-language")) ||
@@ -162,38 +173,29 @@
         normalize(url.searchParams.get("language")) ||
         normalize(new URLSearchParams(window.location.hash.replace(/^#/, "")).get("sap-language"));
 
-      // 2) Sprache vom Parent-Dokument (wenn gleiche Domain)
-      let fromParent = null;
-      try {
-        fromParent = normalize(window.top?.document?.documentElement?.getAttribute("lang"));
-      } catch (e) { /* Cross-Origin: ignorieren */ }
-
       // 3) Browser
       const fromBrowser = normalize(navigator.language || (navigator.languages && navigator.languages[0]));
 
-      // 4) Eigene HTML-Lang, falls extern gesetzt (hier standardmäßig leer)
-      const fromOwnHtml = normalize(document.documentElement.getAttribute("lang"));
+      // Priorität: eigene lang -> URL -> Browser -> Fallback
+      let langFull = fromOwnHtml || fromUrl || fromBrowser || "de";
+      let base = toBase(langFull);
+      if (!SUPPORTED.includes(base)) { base = "de"; langFull = "de-DE"; }
 
-      // Priorität zusammensetzen
-      let lang = fromUrl || fromParent || fromOwnHtml || fromBrowser || "de";
-
-      // Lang/Dir am <html> setzen
-      document.documentElement.setAttribute("lang", lang);
-      document.documentElement.setAttribute("dir", "ltr"); // bei Bedarf: ['ar','he','fa','ur'].includes(lang) ? 'rtl' : 'ltr'
+      // html-Attribut konsistent setzen
+      document.documentElement.setAttribute("lang", base);
+      document.documentElement.setAttribute("dir", "ltr");
 
       // Theme initialisieren
       const savedTheme = localStorage.getItem("theme") || "light";
       document.documentElement.setAttribute("data-theme", savedTheme);
 
-      // Inhalte einsetzen
-      applyLanguage(lang);
-      updateThemeToggle(savedTheme, lang);
-
-      // Datum & Jahr
+      // Inhalte und Datum
+      applyLanguage(base);
+      updateThemeToggle(savedTheme, base);
       const d = new Date();
       document.getElementById("year").textContent = d.getFullYear();
       document.getElementById("date").textContent =
-        new Intl.DateTimeFormat(getLocale(lang), { year: "numeric", month: "long", day: "2-digit" }).format(d);
+        new Intl.DateTimeFormat(getLocale(langFull), { year:"numeric", month:"long", day:"2-digit" }).format(d);
 
       // Theme Toggle
       document.getElementById("themeToggle").addEventListener("click", function(){
@@ -201,49 +203,51 @@
         const next = current === "light" ? "dark" : "light";
         document.documentElement.setAttribute("data-theme", next);
         localStorage.setItem("theme", next);
-        updateThemeToggle(next, lang);
+        updateThemeToggle(next, base);
       });
 
-      // Falls Work Zone das lang-Attribut unseres Dokuments dynamisch ändert, reagieren:
+      // Wenn Work Zone das lang-Attribut unseres Dokuments ändert -> live anpassen
       const mo = new MutationObserver(muts => {
         for (const m of muts) {
           if (m.type === "attributes" && m.attributeName === "lang") {
-            const newLang = normalize(document.documentElement.getAttribute("lang"));
-            if (newLang && newLang !== lang) {
-              lang = newLang;
-              applyLanguage(lang);
-              updateThemeToggle(document.documentElement.getAttribute("data-theme") || "light", lang);
+            const newLangAttr = document.documentElement.getAttribute("lang");
+            const newBase = toBase(newLangAttr);
+            if (SUPPORTED.includes(newBase) && newBase !== base) {
+              base = newBase;
+              langFull = getLocale(newLangAttr);
+              applyLanguage(base);
+              updateThemeToggle(document.documentElement.getAttribute("data-theme") || "light", base);
               document.getElementById("date").textContent =
-                new Intl.DateTimeFormat(getLocale(lang), { year: "numeric", month: "long", day: "2-digit" }).format(d);
+                new Intl.DateTimeFormat(getLocale(langFull), { year:"numeric", month:"long", day:"2-digit" }).format(d);
             }
           }
         }
       });
       mo.observe(document.documentElement, { attributes: true });
 
-      // --- Funktionen ---
-      function updateThemeToggle(mode, lang){
+      // --- UI-Setzer ---
+      function updateThemeToggle(mode, base){
         const btn = document.getElementById("themeToggle");
         const isDark = mode === "dark";
         btn.setAttribute("aria-pressed", String(isDark));
-        btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
+        btn.textContent = isDark ? translations[base].themeDark : translations[base].themeLight;
       }
 
-      function applyLanguage(lang){
-        const t = translations[lang];
+      function applyLanguage(base){
+        const t = translations[base];
         document.getElementById("appName").textContent = t.appName;
         document.getElementById("headline").textContent = t.headline;
         document.getElementById("desc").textContent = t.desc;
-        document.getElementById("supportBtn").textContent = t.support;
         document.getElementById("statusLabel").textContent = t.statusLabel;
         document.getElementById("statusText").textContent = t.statusText;
         document.getElementById("updateLabel").textContent = t.updateLabel;
         document.getElementById("footerText").textContent = t.footer;
 
-        // E-Mail-Betreff passend zur Sprache
-        const mail = new URL(document.getElementById("supportBtn").href);
-        mail.searchParams.set("subject", encodeURIComponent(t.supportSubject));
-        document.getElementById("supportBtn").href = mail.toString();
+        // Mailto-Subject sauber setzen
+        const btn = document.getElementById("supportBtn");
+        const subject = encodeURIComponent(t.supportSubject);
+        btn.textContent = t.support;
+        btn.href = "mailto:support@example.com?subject=" + subject;
       }
     })();
   </script>
