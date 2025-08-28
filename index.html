@@ -146,7 +146,7 @@
 
   // Liest die Sprache anhand des App-Titels aus
   function detectLanguageFromTitle() {
-    const titleElem = document.querySelector("#sapUshellAppTitleText");
+    const titleElem = document.querySelector("#header-shellArea");
     if (!titleElem) return currentLang;
 
     const title = titleElem.textContent.trim();
