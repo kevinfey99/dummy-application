@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" data-theme="light">
+<html data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,7 +18,7 @@
       --radius: 16px;
       --shadow: 0 10px 30px rgba(0,0,0,.08), 0 2px 10px rgba(0,0,0,.04);
     }
-    html[data-theme="dark"] {
+    html[data-theme="dark"]{
       --surface: 17, 24, 39;
       --text: 241, 245, 249;
       --muted: 148, 163, 184;
@@ -47,27 +47,18 @@
       overflow: hidden;
       transition: background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
-    .stripe {
-      height: 6px;
-      background: linear-gradient(90deg,rgba(54, 162, 235, 1), rgba(138, 43, 226, 1));
-    }
+    .stripe { height: 6px; background: linear-gradient(90deg,rgba(54, 162, 235, 1), rgba(138, 43, 226, 1)); }
     .content { padding: clamp(20px, 4vw, 40px); position: relative; }
-    .toggles {
-      position: absolute; top: 16px; right: 16px;
-      display: flex; gap: 8px;
-    }
-    .toggle-btn {
+    .toggles { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
+    .toggle-btn{
       appearance: none; border: 1px solid rgba(0,0,0,.08);
       background: rgba(var(--surface), .9); color: rgb(var(--text));
       border-radius: 999px; padding: 8px 12px; font-weight: 600; font-size: 13px;
       cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
       box-shadow: 0 6px 16px rgba(0,0,0,.08);
     }
-    html[data-theme="dark"] .toggle-btn { border-color: rgba(255,255,255,.15); }
-    .logo {
-      display: inline-flex; align-items: center; gap: 12px;
-      font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; letter-spacing: .2px; margin-bottom: 20px;
-    }
+    html[data-theme="dark"] .toggle-btn{ border-color: rgba(255,255,255,.15); }
+    .logo { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; letter-spacing: .2px; margin-bottom: 20px; }
     .logo-icon {
       width: 36px; height: 36px; border-radius: 10px;
       background: linear-gradient(135deg, rgba(var(--bg-gradient-2), 1), rgba(var(--bg-gradient-3), 1));
@@ -77,7 +68,7 @@
     h1 { margin: 0 0 10px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; }
     p  { margin: 0 0 20px; font-size: clamp(16px, 2.5vw, 18px); line-height: 1.6; color: rgb(var(--muted)); }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-    .btn {
+    .btn{
       appearance: none; border: none; cursor: pointer; border-radius: 999px;
       padding: 12px 18px; font-weight: 600; background: rgba(var(--primary), 1); color: #fff;
       text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
@@ -119,14 +110,17 @@
       <footer>© <span id="year"></span> – <span id="footerText">Platzhalterseite. Alle Rechte vorbehalten.</span></footer>
     </div>
   </main>
+
   <script>
     (function(){
+      // --- Übersetzungen ---
       const translations = {
         de: {
           appName: "Ihre Anwendung",
           headline: "Kommt bald.",
           desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
           support: "Support kontaktieren",
+          supportSubject: "Frage zur Anwendung",
           statusLabel: "Status:",
           statusText: "Vorbereitung des Launches",
           updateLabel: "Letzte Aktualisierung:",
@@ -139,6 +133,7 @@
           headline: "Coming soon.",
           desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
           support: "Contact Support",
+          supportSubject: "Question about the application",
           statusLabel: "Status:",
           statusText: "Preparing the launch",
           updateLabel: "Last update:",
@@ -147,51 +142,108 @@
           themeDark: "🌙 Dark"
         }
       };
+      const SUPPORTED = Object.keys(translations);
 
-      // Theme aus localStorage oder Standard auf Light
-      let savedTheme = localStorage.getItem('theme') || 'light';
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      // --- Helfer ---
+      const normalize = code => {
+        if (!code) return null;
+        const s = String(code).toLowerCase();
+        const base = s.split(/[_-]/)[0]; // en-US -> en
+        return SUPPORTED.includes(base) ? base : null;
+      };
+      const getLocale = lang => (lang === "de" ? "de-DE" : "en-US");
 
-      // Sprache aus HTML lang oder Browser
-      const htmlLang = document.documentElement.getAttribute("lang");
-      let lang = htmlLang ? htmlLang.toLowerCase() : navigator.language.slice(0, 2);
-      if (!['de', 'en'].includes(lang)) lang = 'de';
+      // 1) Sprache aus URL (sap-language / lang / locale / language)
+      const url = new URL(window.location.href);
+      const fromUrl =
+        normalize(url.searchParams.get("sap-language")) ||
+        normalize(url.searchParams.get("lang")) ||
+        normalize(url.searchParams.get("locale")) ||
+        normalize(url.searchParams.get("language")) ||
+        normalize(new URLSearchParams(window.location.hash.replace(/^#/, "")).get("sap-language"));
 
-      // Inhalte setzen
-      setLanguage(lang);
-      updateThemeToggle(savedTheme);
+      // 2) Sprache vom Parent-Dokument (wenn gleiche Domain)
+      let fromParent = null;
+      try {
+        fromParent = normalize(window.top?.document?.documentElement?.getAttribute("lang"));
+      } catch (e) { /* Cross-Origin: ignorieren */ }
 
-      // Datum & Jahr aktualisieren
+      // 3) Browser
+      const fromBrowser = normalize(navigator.language || (navigator.languages && navigator.languages[0]));
+
+      // 4) Eigene HTML-Lang, falls extern gesetzt (hier standardmäßig leer)
+      const fromOwnHtml = normalize(document.documentElement.getAttribute("lang"));
+
+      // Priorität zusammensetzen
+      let lang = fromUrl || fromParent || fromOwnHtml || fromBrowser || "de";
+
+      // Lang/Dir am <html> setzen
+      document.documentElement.setAttribute("lang", lang);
+      document.documentElement.setAttribute("dir", "ltr"); // bei Bedarf: ['ar','he','fa','ur'].includes(lang) ? 'rtl' : 'ltr'
+
+      // Theme initialisieren
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+
+      // Inhalte einsetzen
+      applyLanguage(lang);
+      updateThemeToggle(savedTheme, lang);
+
+      // Datum & Jahr
       const d = new Date();
-      document.getElementById('year').textContent = d.getFullYear();
-      document.getElementById('date').textContent = d.toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-US', { year:'numeric', month:'long', day:'2-digit' });
+      document.getElementById("year").textContent = d.getFullYear();
+      document.getElementById("date").textContent =
+        new Intl.DateTimeFormat(getLocale(lang), { year: "numeric", month: "long", day: "2-digit" }).format(d);
 
       // Theme Toggle
-      document.getElementById('themeToggle').addEventListener('click', function(){
-        const current = document.documentElement.getAttribute('data-theme') || 'light';
-        const next = current === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        updateThemeToggle(next);
+      document.getElementById("themeToggle").addEventListener("click", function(){
+        const current = document.documentElement.getAttribute("data-theme") || "light";
+        const next = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+        updateThemeToggle(next, lang);
       });
 
-      function updateThemeToggle(mode){
-        const btn = document.getElementById('themeToggle');
-        const isDark = mode === 'dark';
-        btn.setAttribute('aria-pressed', String(isDark));
+      // Falls Work Zone das lang-Attribut unseres Dokuments dynamisch ändert, reagieren:
+      const mo = new MutationObserver(muts => {
+        for (const m of muts) {
+          if (m.type === "attributes" && m.attributeName === "lang") {
+            const newLang = normalize(document.documentElement.getAttribute("lang"));
+            if (newLang && newLang !== lang) {
+              lang = newLang;
+              applyLanguage(lang);
+              updateThemeToggle(document.documentElement.getAttribute("data-theme") || "light", lang);
+              document.getElementById("date").textContent =
+                new Intl.DateTimeFormat(getLocale(lang), { year: "numeric", month: "long", day: "2-digit" }).format(d);
+            }
+          }
+        }
+      });
+      mo.observe(document.documentElement, { attributes: true });
+
+      // --- Funktionen ---
+      function updateThemeToggle(mode, lang){
+        const btn = document.getElementById("themeToggle");
+        const isDark = mode === "dark";
+        btn.setAttribute("aria-pressed", String(isDark));
         btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
       }
 
-      function setLanguage(lang){
+      function applyLanguage(lang){
         const t = translations[lang];
-        document.getElementById('appName').textContent = t.appName;
-        document.getElementById('headline').textContent = t.headline;
-        document.getElementById('desc').textContent = t.desc;
-        document.getElementById('supportBtn').textContent = t.support;
-        document.getElementById('statusLabel').textContent = t.statusLabel;
-        document.getElementById('statusText').textContent = t.statusText;
-        document.getElementById('updateLabel').textContent = t.updateLabel;
-        document.getElementById('footerText').textContent = t.footer;
+        document.getElementById("appName").textContent = t.appName;
+        document.getElementById("headline").textContent = t.headline;
+        document.getElementById("desc").textContent = t.desc;
+        document.getElementById("supportBtn").textContent = t.support;
+        document.getElementById("statusLabel").textContent = t.statusLabel;
+        document.getElementById("statusText").textContent = t.statusText;
+        document.getElementById("updateLabel").textContent = t.updateLabel;
+        document.getElementById("footerText").textContent = t.footer;
+
+        // E-Mail-Betreff passend zur Sprache
+        const mail = new URL(document.getElementById("supportBtn").href);
+        mail.searchParams.set("subject", encodeURIComponent(t.supportSubject));
+        document.getElementById("supportBtn").href = mail.toString();
       }
     })();
   </script>
