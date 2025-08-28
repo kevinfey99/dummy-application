@@ -91,6 +91,7 @@
     <div class="content">
       <div class="toggles">
         <button class="toggle-btn" id="themeToggle" type="button" aria-pressed="false">🌞 Light</button>
+        <button class="toggle-btn" id="langToggle" type="button">DE</button>
       </div>
       <div class="logo">
         <span class="logo-icon floaty">
@@ -111,117 +112,188 @@
     </div>
   </main>
 
- <script>
-(function(){
-  const translations = {
-    de: {
-      appName: "Ihre Anwendung",
-      headline: "Kommt bald.",
-      desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
-      support: "Support kontaktieren",
-      supportSubject: "Frage zur Anwendung",
-      statusLabel: "Status:",
-      statusText: "Vorbereitung des Launches",
-      updateLabel: "Letzte Aktualisierung:",
-      footer: "Platzhalterseite. Alle Rechte vorbehalten.",
-      themeLight: "🌞 Light",
-      themeDark: "🌙 Dark"
-    },
-    en: {
-      appName: "Your Application",
-      headline: "Coming soon.",
-      desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
-      support: "Contact Support",
-      supportSubject: "Question about the application",
-      statusLabel: "Status:",
-      statusText: "Preparing the launch",
-      updateLabel: "Last update:",
-      footer: "Placeholder page. All rights reserved.",
-      themeLight: "🌞 Light",
-      themeDark: "🌙 Dark"
-    }
-  };
+  <script>
+    (function(){
+      // Übersetzungen
+      const translations = {
+        de: {
+          appName: "Ihre Anwendung",
+          headline: "Kommt bald.",
+          desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
+          support: "Support kontaktieren",
+          supportSubject: "Frage zur Anwendung",
+          statusLabel: "Status:",
+          statusText: "Vorbereitung des Launches",
+          updateLabel: "Letzte Aktualisierung:",
+          footer: "Platzhalterseite. Alle Rechte vorbehalten.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark",
+          langToggle: "DE"
+        },
+        en: {
+          appName: "Your Application",
+          headline: "Coming soon.",
+          desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
+          support: "Contact Support",
+          supportSubject: "Question about the application",
+          statusLabel: "Status:",
+          statusText: "Preparing the launch",
+          updateLabel: "Last update:",
+          footer: "Placeholder page. All rights reserved.",
+          themeLight: "🌞 Light",
+          themeDark: "🌙 Dark",
+          langToggle: "EN"
+        }
+      };
+      const supported = Object.keys(translations);
+      let currentLang = "de";
 
-  let currentLang = "de"; // Standard
-
-  // Liest die Sprache anhand des App-Titels aus
-  function detectLanguageFromTitle() {
-    const titleElem = document.querySelector("#header-shellArea");
-    if (!titleElem) return currentLang;
-
-    const title = titleElem.textContent.trim();
-    // Prüfen, ob Titel englisch ist
-    if (/manage project invoicing/i.test(title)) {
-      return "en";
-    }
-    return "de";
-  }
-
-  // Sprache setzen
-  function setLanguage(lang) {
-    currentLang = lang;
-    const t = translations[lang];
-
-    document.getElementById("appName").textContent = t.appName;
-    document.getElementById("headline").textContent = t.headline;
-    document.getElementById("desc").textContent = t.desc;
-    document.getElementById("supportBtn").textContent = t.support;
-    document.getElementById("statusLabel").textContent = t.statusLabel;
-    document.getElementById("statusText").textContent = t.statusText;
-    document.getElementById("updateLabel").textContent = t.updateLabel;
-    document.getElementById("footerText").textContent = t.footer;
-
-    const mailBtn = document.getElementById("supportBtn");
-    mailBtn.href = "mailto:support@example.com?subject=" + encodeURIComponent(t.supportSubject);
-
-    // Datum in korrektem Format anzeigen
-    const d = new Date();
-    const locale = lang === "de" ? "de-DE" : "en-US";
-    document.getElementById("date").textContent = d.toLocaleDateString(locale, {
-      year: "numeric", month: "long", day: "2-digit"
-    });
-
-    updateThemeToggle(document.documentElement.getAttribute("data-theme") || "light");
-  }
-
-  function updateThemeToggle(mode){
-    const btn = document.getElementById("themeToggle");
-    const isDark = mode === "dark";
-    btn.setAttribute("aria-pressed", String(isDark));
-    btn.textContent = isDark ? translations[currentLang].themeDark : translations[currentLang].themeLight;
-  }
-
-  // Theme initialisieren
-  const savedTheme = localStorage.getItem("theme") || "light";
-  document.documentElement.setAttribute("data-theme", savedTheme);
-
-  // Startsprache ermitteln und setzen
-  setLanguage(detectLanguageFromTitle());
-
-  // Live überwachen, wenn Work Zone Sprache ändert
-  const titleElem = document.querySelector("#sapUshellAppTitleText");
-  if (titleElem) {
-    const observer = new MutationObserver(() => {
-      const detected = detectLanguageFromTitle();
-      if (detected !== currentLang) {
-        setLanguage(detected);
+      // Liest Sprache aus verschiedenen Quellen
+      function getStoredLang() {
+        const stored = localStorage.getItem("lang");
+        return supported.includes(stored) ? stored : null;
       }
-    });
-    observer.observe(titleElem, { childList: true, subtree: true, characterData: true });
-  }
+      function getLangFromUrl() {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        let p = params.get("sap-language") || params.get("lang") || params.get("language") || params.get("locale");
+        if (!p && window.location.hash) {
+          const hashParams = new URLSearchParams(window.location.hash.slice(1));
+          p = hashParams.get("sap-language");
+        }
+        if (p) {
+          const base = String(p).toLowerCase().split(/[-_]/)[0];
+          return supported.includes(base) ? base : null;
+        }
+        return null;
+      }
+      function getLangFromParent() {
+        try {
+          const lang = window.parent.document.documentElement.getAttribute("lang");
+          const base = lang && lang.split(/[-_]/)[0];
+          return supported.includes(base) ? base : null;
+        } catch(e) {
+          return null;
+        }
+      }
+      // Heuristik über Header-Text (Works ohne spezielle APIs)
+      function getLangFromHeader() {
+        const header = document.querySelector("#header-shellArea") || document.querySelector("#textheader-shellArea") || document.querySelector("#sapUshellAppTitleText");
+        if (!header) return null;
+        const txt = header.textContent.trim();
+        // Deutsche Schlüsselwörter
+        const deRegex = /(projekt|verwalten|kommt|fakturierung|platzhalter|vorbereitung|aktualisierung)/i;
+        const enRegex = /(project|manage|coming|placeholder|launch|update|soon)/i;
+        if (deRegex.test(txt)) return "de";
+        if (enRegex.test(txt)) return "en";
+        // Sonderzeichen in DE
+        if (/[äöüß]/i.test(txt)) return "de";
+        return null;
+      }
+      function getLangFromBrowser() {
+        const nav = navigator.language || (navigator.languages && navigator.languages[0]);
+        if (!nav) return null;
+        const base = String(nav).toLowerCase().split(/[-_]/)[0];
+        return supported.includes(base) ? base : null;
+      }
+      // Ermittelt die bevorzugte Sprache
+      function detectInitialLang() {
+        return getStoredLang()
+            || getLangFromUrl()
+            || getLangFromParent()
+            || getLangFromHeader()
+            || getLangFromBrowser()
+            || "de";
+      }
 
-  // Theme Toggle
-  document.getElementById("themeToggle").addEventListener("click", function(){
-    const current = document.documentElement.getAttribute("data-theme") || "light";
-    const next = current === "light" ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
-    updateThemeToggle(next);
-  });
+      // Wendet Übersetzung an
+      function setLanguage(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+        document.getElementById("appName").textContent   = t.appName;
+        document.getElementById("headline").textContent  = t.headline;
+        document.getElementById("desc").textContent      = t.desc;
+        document.getElementById("statusLabel").textContent = t.statusLabel;
+        document.getElementById("statusText").textContent  = t.statusText;
+        document.getElementById("updateLabel").textContent = t.updateLabel;
+        document.getElementById("footerText").textContent  = t.footer;
+        // Support-Button
+        const supportBtn = document.getElementById("supportBtn");
+        supportBtn.textContent = t.support;
+        supportBtn.href = "mailto:support@example.com?subject=" + encodeURIComponent(t.supportSubject);
+        // Datum
+        const d = new Date();
+        const locale = lang === "de" ? "de-DE" : "en-US";
+        document.getElementById("date").textContent = d.toLocaleDateString(locale, { year:"numeric", month:"long", day:"2-digit" });
+        // Toggle Buttons aktualisieren
+        updateThemeToggle(document.documentElement.getAttribute("data-theme") || "light");
+        updateLangToggle();
+      }
 
-  // Jahr setzen
-  document.getElementById("year").textContent = new Date().getFullYear();
-})();
-</script>
+      // Theme-Schalter aktualisieren
+      function updateThemeToggle(mode) {
+        const btn = document.getElementById("themeToggle");
+        const isDark = mode === "dark";
+        btn.setAttribute("aria-pressed", String(isDark));
+        btn.textContent = isDark ? translations[currentLang].themeDark : translations[currentLang].themeLight;
+      }
+      // Sprachen-Schalter aktualisieren
+      function updateLangToggle() {
+        const btn = document.getElementById("langToggle");
+        btn.textContent = translations[currentLang].langToggle;
+      }
+
+      // Initialisierung
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      setLanguage(detectInitialLang());
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Theme-Umschalter
+      document.getElementById("themeToggle").addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme") || "light";
+        const next = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+        updateThemeToggle(next);
+      });
+
+      // Sprach-Umschalter
+      document.getElementById("langToggle").addEventListener("click", () => {
+        // Toggle nur zwischen de und en, erweiterbar bei Bedarf
+        const next = currentLang === "de" ? "en" : "de";
+        localStorage.setItem("lang", next);
+        setLanguage(next);
+      });
+
+      // Beobachtet Änderungen am lang-Attribut des Dokuments
+      const htmlObserver = new MutationObserver(muts => {
+        muts.forEach(m => {
+          if (m.type === "attributes" && m.attributeName === "lang") {
+            const newLang = document.documentElement.getAttribute("lang");
+            const base = newLang && newLang.split(/[-_]/)[0];
+            if (supported.includes(base) && base !== currentLang) {
+              localStorage.removeItem("lang"); // Browser/Work Zone hat Vorrang
+              setLanguage(base);
+            }
+          }
+        });
+      });
+      htmlObserver.observe(document.documentElement, { attributes: true });
+
+      // Beobachtet den Header der Work Zone (globaler Titel)
+      const headerEl = document.querySelector("#header-shellArea") || document.querySelector("#textheader-shellArea") || document.querySelector("#sapUshellAppTitleText");
+      if (headerEl) {
+        const headerObserver = new MutationObserver(() => {
+          const detected = getLangFromHeader();
+          if (detected && detected !== currentLang) {
+            localStorage.removeItem("lang"); // automatische Sprache
+            setLanguage(detected);
+          }
+        });
+        headerObserver.observe(headerEl, { childList: true, subtree: true, characterData: true });
+      }
+    })();
+  </script>
 </body>
 </html>
