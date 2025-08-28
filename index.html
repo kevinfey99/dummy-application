@@ -120,77 +120,97 @@
       <footer>© <span id="year"></span> – <span id="footerText">Platzhalterseite. Alle Rechte vorbehalten.</span></footer>
     </div>
   </main>
-  <script>
-    (function(){
-      const translations = {
-        de: {
-          appName: "Ihre Anwendung",
-          headline: "Kommt bald.",
-          desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
-          support: "Support kontaktieren",
-          statusLabel: "Status:",
-          statusText: "Vorbereitung des Launches",
-          updateLabel: "Letzte Aktualisierung:",
-          footer: "Platzhalterseite. Alle Rechte vorbehalten.",
-          themeLight: "🌞 Light",
-          themeDark: "🌙 Dark"
-        },
-        en: {
-          appName: "Your Application",
-          headline: "Coming soon.",
-          desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
-          support: "Contact Support",
-          statusLabel: "Status:",
-          statusText: "Preparing the launch",
-          updateLabel: "Last update:",
-          footer: "Placeholder page. All rights reserved.",
-          themeLight: "🌞 Light",
-          themeDark: "🌙 Dark"
-        }
-      };
-      var savedTheme = localStorage.getItem('theme') || 'light';
-      var savedLang = localStorage.getItem('lang') || 'de';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      setLanguage(savedLang);
-      updateThemeToggle(savedTheme);
-      var d = new Date();
-      document.getElementById('year').textContent = d.getFullYear();
-      document.getElementById('date').textContent = d.toLocaleDateString(savedLang === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
-      document.getElementById('themeToggle').addEventListener('click', function(){
-        var current = document.documentElement.getAttribute('data-theme') || 'light';
-        var next = current === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        updateThemeToggle(next);
-      });
-      document.getElementById('langToggle').addEventListener('click', function(){
-        var current = localStorage.getItem('lang') || 'de';
-        var next = current === 'de' ? 'en' : 'de';
-        localStorage.setItem('lang', next);
-        setLanguage(next);
-        document.getElementById('date').textContent = d.toLocaleDateString(next === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
-      });
-      function updateThemeToggle(mode){
-        var btn = document.getElementById('themeToggle');
-        var isDark = mode === 'dark';
-        btn.setAttribute('aria-pressed', String(isDark));
-        var lang = localStorage.getItem('lang') || 'de';
-        btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
-      }
-      function setLanguage(lang){
-        const t = translations[lang];
-        document.getElementById('appName').textContent = t.appName;
-        document.getElementById('headline').textContent = t.headline;
-        document.getElementById('desc').textContent = t.desc;
-        document.getElementById('supportBtn').textContent = t.support;
-        document.getElementById('statusLabel').textContent = t.statusLabel;
-        document.getElementById('statusText').textContent = t.statusText;
-        document.getElementById('updateLabel').textContent = t.updateLabel;
-        document.getElementById('footerText').textContent = t.footer;
-        document.getElementById('langToggle').textContent = lang.toUpperCase();
-        updateThemeToggle(document.documentElement.getAttribute('data-theme'));
-      }
-    })();
-  </script>
+<script>
+(function(){
+  const translations = {
+    de: {
+      appName: "Ihre Anwendung",
+      headline: "Kommt bald.",
+      desc: "Diese Seite dient als Platzhalter. Hier wird in Kürze Ihre Anwendung verfügbar sein. Wenn Sie Fragen oder Anregungen haben, wenden Sie sich jederzeit gerne an unseren Support.",
+      support: "Support kontaktieren",
+      statusLabel: "Status:",
+      statusText: "Vorbereitung des Launches",
+      updateLabel: "Letzte Aktualisierung:",
+      footer: "Platzhalterseite. Alle Rechte vorbehalten.",
+      themeLight: "🌞 Light",
+      themeDark: "🌙 Dark"
+    },
+    en: {
+      appName: "Your Application",
+      headline: "Coming soon.",
+      desc: "This page is a placeholder. Your application will be available here shortly. If you have any questions or feedback, please contact our support team.",
+      support: "Contact Support",
+      statusLabel: "Status:",
+      statusText: "Preparing the launch",
+      updateLabel: "Last update:",
+      footer: "Placeholder page. All rights reserved.",
+      themeLight: "🌞 Light",
+      themeDark: "🌙 Dark"
+    }
+  };
+
+  // Theme aus localStorage oder Standard auf Light
+  let savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  // Prüfen, ob HTML-Tag eine Sprache vorgibt (z.B. <html lang="de">)
+  const htmlLang = document.documentElement.getAttribute("lang");
+
+  // Sprache aus LocalStorage oder HTML-Tag oder Fallback auf Browser-Sprache
+  let savedLang = localStorage.getItem('lang') 
+    || (htmlLang ? htmlLang.toLowerCase() : navigator.language.slice(0,2));
+
+  // Fallback auf Deutsch, falls nicht "en" oder "de"
+  if (!['de', 'en'].includes(savedLang)) savedLang = 'de';
+
+  setLanguage(savedLang);
+  updateThemeToggle(savedTheme);
+
+  // Datum und Jahr setzen
+  const d = new Date();
+  document.getElementById('year').textContent = d.getFullYear();
+  document.getElementById('date').textContent = d.toLocaleDateString(savedLang === 'de' ? 'de-DE' : 'en-US', { year:'numeric', month:'long', day:'2-digit' });
+
+  // Theme Toggle
+  document.getElementById('themeToggle').addEventListener('click', function(){
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeToggle(next);
+  });
+
+  // Sprach-Toggle
+  document.getElementById('langToggle').addEventListener('click', function(){
+    const current = localStorage.getItem('lang') || savedLang;
+    const next = current === 'de' ? 'en' : 'de';
+    localStorage.setItem('lang', next);
+    setLanguage(next);
+    document.getElementById('date').textContent = d.toLocaleDateString(next === 'de' ? 'de-DE' : 'en-US', { year:'numeric', month:'long', day:'2-digit' });
+  });
+
+  function updateThemeToggle(mode){
+    const btn = document.getElementById('themeToggle');
+    const isDark = mode === 'dark';
+    btn.setAttribute('aria-pressed', String(isDark));
+    const lang = localStorage.getItem('lang') || savedLang;
+    btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
+  }
+
+  function setLanguage(lang){
+    const t = translations[lang];
+    document.getElementById('appName').textContent = t.appName;
+    document.getElementById('headline').textContent = t.headline;
+    document.getElementById('desc').textContent = t.desc;
+    document.getElementById('supportBtn').textContent = t.support;
+    document.getElementById('statusLabel').textContent = t.statusLabel;
+    document.getElementById('statusText').textContent = t.statusText;
+    document.getElementById('updateLabel').textContent = t.updateLabel;
+    document.getElementById('footerText').textContent = t.footer;
+    document.getElementById('langToggle').textContent = lang.toUpperCase();
+    updateThemeToggle(document.documentElement.getAttribute('data-theme'));
+  }
+})();
+</script>
 </body>
 </html>
