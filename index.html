@@ -47,15 +47,9 @@
       overflow: hidden;
       transition: background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
-    .stripe {
-      height: 6px;
-      background: linear-gradient(90deg,rgba(54, 162, 235, 1), rgba(138, 43, 226, 1));
-    }
+    .stripe { height: 6px; background: linear-gradient(90deg,rgba(54,162,235,1), rgba(138,43,226,1)); }
     .content { padding: clamp(20px, 4vw, 40px); position: relative; }
-    .toggles {
-      position: absolute; top: 16px; right: 16px;
-      display: flex; gap: 8px;
-    }
+    .toggles { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
     .toggle-btn{
       appearance: none; border: 1px solid rgba(0,0,0,.08);
       background: rgba(var(--surface), .9); color: rgb(var(--text));
@@ -100,7 +94,6 @@
     <div class="content">
       <div class="toggles">
         <button class="toggle-btn" id="themeToggle" type="button" aria-pressed="false">🌞 Light</button>
-        <button class="toggle-btn" id="langToggle" type="button">DE</button>
       </div>
       <div class="logo">
         <span class="logo-icon floaty">
@@ -120,8 +113,10 @@
       <footer>© <span id="year"></span> – <span id="footerText">Platzhalterseite. Alle Rechte vorbehalten.</span></footer>
     </div>
   </main>
+
   <script>
     (function(){
+      // --- Texte ---
       const translations = {
         de: {
           appName: "Ihre Anwendung",
@@ -148,48 +143,146 @@
           themeDark: "🌙 Dark"
         }
       };
-      var savedTheme = localStorage.getItem('theme') || 'light';
-      var savedLang = localStorage.getItem('lang') || 'de';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      setLanguage(savedLang);
-      updateThemeToggle(savedTheme);
-      var d = new Date();
-      document.getElementById('year').textContent = d.getFullYear();
-      document.getElementById('date').textContent = d.toLocaleDateString(savedLang === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
-      document.getElementById('themeToggle').addEventListener('click', function(){
-        var current = document.documentElement.getAttribute('data-theme') || 'light';
-        var next = current === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        updateThemeToggle(next);
-      });
-      document.getElementById('langToggle').addEventListener('click', function(){
-        var current = localStorage.getItem('lang') || 'de';
-        var next = current === 'de' ? 'en' : 'de';
-        localStorage.setItem('lang', next);
-        setLanguage(next);
-        document.getElementById('date').textContent = d.toLocaleDateString(next === 'de' ? 'de-DE':'en-US', { year:'numeric', month:'long', day:'2-digit' });
-      });
-      function updateThemeToggle(mode){
-        var btn = document.getElementById('themeToggle');
-        var isDark = mode === 'dark';
+
+      // --- Helfer ---
+      const getLocale = l => (l === "de" ? "de-DE" : "en-US");
+      const normalizeBase = v => (v || "").toLowerCase().split(/[-_]/)[0];
+      const SUP = Object.keys(translations);
+
+      // 1) Sprache anhand des Suchfeldes bestimmen
+      function detectFromSearchField() {
+        // Suche nach <input type="search"> – Work Zone nutzt dieses Feld global
+        const el = document.querySelector('input[type="search"]');
+        if (!el) return null;
+
+        const attrs = [
+          el.getAttribute('aria-label') || '',
+          el.getAttribute('title') || '',
+          el.getAttribute('placeholder') || ''
+        ].join(' ').toLowerCase();
+
+        if (/\bsuchen\b/.test(attrs)) return "de";
+        if (/\bsearch\b/.test(attrs)) return "en";
+        return null;
+      }
+
+      // 2) Sprache aus URL (sap-language/lang/locale) lesen
+      function detectFromUrl() {
+        const p = new URLSearchParams(location.search);
+        let raw = p.get('sap-language') || p.get('lang') || p.get('locale') || p.get('language');
+        if (!raw && location.hash) {
+          const hp = new URLSearchParams(location.hash.slice(1));
+          raw = hp.get('sap-language');
+        }
+        const base = normalizeBase(raw);
+        return SUP.includes(base) ? base : null;
+      }
+
+      // 3) Browser
+      function detectFromBrowser() {
+        const base = normalizeBase(navigator.language || (navigator.languages && navigator.languages[0]));
+        return SUP.includes(base) ? base : null;
+      }
+
+      // Gesamterkennung (Suchfeld > URL > gespeicherter Wert > Browser > de)
+      function detectLanguage() {
+        return (
+          detectFromSearchField() ||
+          detectFromUrl() ||
+          localStorage.getItem('lang') && SUP.includes(localStorage.getItem('lang')) ? localStorage.getItem('lang') : null ||
+          detectFromBrowser() ||
+          "de"
+        );
+      }
+
+      // UI anwenden
+      function setLanguage(lang) {
+        const t = translations[lang];
+        document.getElementById('appName').textContent   = t.appName;
+        document.getElementById('headline').textContent  = t.headline;
+        document.getElementById('desc').textContent      = t.desc;
+        document.getElementById('supportBtn').textContent= t.support;
+        document.getElementById('statusLabel').textContent = t.statusLabel;
+        document.getElementById('statusText').textContent  = t.statusText;
+        document.getElementById('updateLabel').textContent = t.updateLabel;
+        document.getElementById('footerText').textContent  = t.footer;
+
+        // Datum
+        const d = new Date();
+        document.getElementById('date').textContent =
+          d.toLocaleDateString(getLocale(lang), { year:'numeric', month:'long', day:'2-digit' });
+
+        // Mail-Subject passend
+        const mail = new URL(document.getElementById('supportBtn').href);
+        mail.searchParams.set('subject', encodeURIComponent(lang === 'de' ? 'Frage zur Anwendung' : 'Question about the application'));
+        document.getElementById('supportBtn').href = mail.toString();
+
+        // html@lang setzen (Accessibility)
+        document.documentElement.setAttribute('lang', lang);
+
+        // speichern, damit ein Reload konsistent bleibt
+        localStorage.setItem('lang', lang);
+
+        // Theme-Button-Text aktualisieren
+        updateThemeToggle(document.documentElement.getAttribute('data-theme') || 'light', lang);
+      }
+
+      function updateThemeToggle(mode, lang){
+        const btn = document.getElementById('themeToggle');
+        const isDark = mode === 'dark';
         btn.setAttribute('aria-pressed', String(isDark));
-        var lang = localStorage.getItem('lang') || 'de';
         btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
       }
-      function setLanguage(lang){
-        const t = translations[lang];
-        document.getElementById('appName').textContent = t.appName;
-        document.getElementById('headline').textContent = t.headline;
-        document.getElementById('desc').textContent = t.desc;
-        document.getElementById('supportBtn').textContent = t.support;
-        document.getElementById('statusLabel').textContent = t.statusLabel;
-        document.getElementById('statusText').textContent = t.statusText;
-        document.getElementById('updateLabel').textContent = t.updateLabel;
-        document.getElementById('footerText').textContent = t.footer;
-        document.getElementById('langToggle').textContent = lang.toUpperCase();
-        updateThemeToggle(document.documentElement.getAttribute('data-theme'));
-      }
+
+      // --- Initialisierung ---
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      let currentLang = detectLanguage();
+      setLanguage(currentLang);
+
+      // Jahr
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Theme Toggle
+      document.getElementById('themeToggle').addEventListener('click', function(){
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateThemeToggle(next, currentLang);
+      });
+
+      // --- Live-Erkennung: Wenn Work Zone den Search-Input austauscht/ändert ---
+      const observeTarget = document.body;
+      const debounced = (fn, ms=100) => {
+        let to; return (...args)=>{ clearTimeout(to); to=setTimeout(()=>fn(...args), ms); };
+      };
+      const recheckLang = debounced(() => {
+        const detected = detectFromSearchField();
+        if (detected && detected !== currentLang) {
+          currentLang = detected;
+          setLanguage(currentLang);
+        }
+      }, 100);
+
+      const mo = new MutationObserver(muts => {
+        // Prüfe nur, ob ein input[type="search"] betroffen ist oder Attribute sich änderten
+        let relevant = false;
+        for (const m of muts) {
+          if (m.type === 'attributes' && m.target && m.target.matches && m.target.matches('input[type="search"]')) {
+            relevant = true; break;
+          }
+          if (m.type === 'childList' && (m.addedNodes.length || m.removedNodes.length)) {
+            relevant = true; break;
+          }
+        }
+        if (relevant) recheckLang();
+      });
+      mo.observe(observeTarget, { subtree: true, childList: true, attributes: true, characterData: false });
+
+      // Erste Nachprüfung ein paar ms nach Load (falls das Search-Feld später rendert)
+      setTimeout(recheckLang, 300);
     })();
   </script>
 </body>
