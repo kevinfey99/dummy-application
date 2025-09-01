@@ -7,81 +7,26 @@
   <meta name="description" content="Hier entsteht in Kürze eine Anwendung. Bei Fragen wenden Sie sich gerne an den Support." />
   <meta name="color-scheme" content="light dark" />
   <style>
-    :root {
-      --bg-gradient-1: 255, 99, 132;
-      --bg-gradient-2: 54, 162, 235;
-      --bg-gradient-3: 75, 192, 192;
-      --surface: 255,255,255;
-      --text: 17, 24, 39;
-      --muted: 75, 85, 99;
-      --primary: 37, 99, 235;
-      --radius: 16px;
-      --shadow: 0 10px 30px rgba(0,0,0,.08), 0 2px 10px rgba(0,0,0,.04);
-    }
-    html[data-theme="dark"]{
-      --surface: 17, 24, 39;
-      --text: 241, 245, 249;
-      --muted: 148, 163, 184;
-      --primary: 96, 165, 250;
-      --shadow: 0 10px 30px rgba(0,0,0,.35), 0 2px 10px rgba(0,0,0,.2);
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      color: rgb(var(--text));
-      background-color: #ffffff;
-      display: grid; place-items: center;
-      padding: clamp(16px, 4vw, 48px);
-      transition: background-color .25s ease, color .25s ease;
-    }
-    .card {
-      width: min(720px, 100%);
-      background: rgba(var(--surface), .75);
-      backdrop-filter: blur(10px) saturate(1.2);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,.35);
-      overflow: hidden;
-      transition: background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
-    }
-    .stripe { height: 6px; background: linear-gradient(90deg,rgba(54, 162, 235, 1), rgba(138, 43, 226, 1)); }
-    .content { padding: clamp(20px, 4vw, 40px); position: relative; }
-    .toggles { position: absolute; top: 16px; right: 16px; display: flex; gap: 8px; }
-    .toggle-btn{
-      appearance: none; border: 1px solid rgba(0,0,0,.08);
-      background: rgba(var(--surface), .9); color: rgb(var(--text));
-      border-radius: 999px; padding: 8px 12px; font-weight: 600; font-size: 13px;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-      box-shadow: 0 6px 16px rgba(0,0,0,.08);
-    }
-    html[data-theme="dark"] .toggle-btn{ border-color: rgba(255,255,255,.15); }
-    .logo { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(18px, 2.4vw, 22px); font-weight: 700; letter-spacing: .2px; margin-bottom: 20px; }
-    .logo-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, rgba(var(--bg-gradient-2), 1), rgba(var(--bg-gradient-3), 1));
-      display: grid; place-items: center; box-shadow: 0 6px 16px rgba(0,0,0,.12);
-    }
-    .logo-icon svg { width: 20px; height: 20px; fill: white; opacity: .95; }
-    h1 { margin: 0 0 10px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; }
-    p  { margin: 0 0 20px; font-size: clamp(16px, 2.5vw, 18px); line-height: 1.6; color: rgb(var(--muted)); }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-    .btn{
-      appearance: none; border: none; cursor: pointer; border-radius: 999px;
-      padding: 12px 18px; font-weight: 600; background: rgba(var(--primary), 1); color: #fff;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
-      transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease;
-      box-shadow: 0 10px 18px rgba(var(--primary), .25);
-    }
-    .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); }
-    .meta { margin-top: 24px; display: grid; gap: 8px; font-size: 14px; color: rgb(var(--muted)); }
-    footer { margin-top: 28px; font-size: 13px; color: rgb(var(--muted)); }
-    @media (prefers-reduced-motion: no-preference) {
-      .floaty { animation: float 8s ease-in-out infinite; }
-      @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-    }
+    :root { --surface:255,255,255; --text:17,24,39; --muted:75,85,99; --primary:37,99,235; --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.08),0 2px 10px rgba(0,0,0,.04); }
+    html[data-theme="dark"]{ --surface:17,24,39; --text:241,245,249; --muted:148,163,184; --primary:96,165,250; --shadow:0 10px 30px rgba(0,0,0,.35),0 2px 10px rgba(0,0,0,.2); }
+    *,*::before,*::after{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";color:rgb(var(--text));background:#fff;display:grid;place-items:center;padding:clamp(16px,4vw,48px);transition:background-color .25s,color .25s}
+    .card{width:min(720px,100%);background:rgba(var(--surface),.75);backdrop-filter:blur(10px) saturate(1.2);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.35);overflow:hidden}
+    .stripe{height:6px;background:linear-gradient(90deg,rgba(54,162,235,1),rgba(138,43,226,1))}
+    .content{padding:clamp(20px,4vw,40px);position:relative}
+    .toggles{position:absolute;top:16px;right:16px;display:flex;gap:8px}
+    .toggle-btn{appearance:none;border:1px solid rgba(0,0,0,.08);background:rgba(var(--surface),.9);color:rgb(var(--text));border-radius:999px;padding:8px 12px;font-weight:600;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    html[data-theme="dark"] .toggle-btn{border-color:rgba(255,255,255,.15)}
+    .logo{display:inline-flex;align-items:center;gap:12px;font-size:clamp(18px,2.4vw,22px);font-weight:700;letter-spacing:.2px;margin-bottom:20px}
+    .logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg, rgba(54,162,235,1), rgba(75,192,192,1));display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+    .logo-icon svg{width:20px;height:20px;fill:#fff;opacity:.95}
+    h1{margin:0 0 10px;font-size:clamp(28px,5vw,40px);line-height:1.15}
+    p{margin:0 0 20px;font-size:clamp(16px,2.5vw,18px);line-height:1.6;color:rgb(var(--muted))}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+    .btn{appearance:none;border:none;cursor:pointer;border-radius:999px;padding:12px 18px;font-weight:600;background:rgba(var(--primary),1);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:10px;box-shadow:0 10px 18px rgba(37,99,235,.25)}
+    .btn:hover{transform:translateY(-1px)} .btn:active{transform:translateY(0)}
+    .meta{margin-top:24px;display:grid;gap:8px;font-size:14px;color:rgb(var(--muted))}
+    footer{margin-top:28px;font-size:13px;color:rgb(var(--muted))}
   </style>
 </head>
 <body>
@@ -92,9 +37,7 @@
         <button class="toggle-btn" id="themeToggle" type="button" aria-pressed="false">🌞 Light</button>
       </div>
       <div class="logo">
-        <span class="logo-icon floaty">
-          <svg viewBox="0 0 24 24"><path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7zm3-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7zM9 9h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2zm0 4h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2z"/></svg>
-        </span>
+        <span class="logo-icon"><svg viewBox="0 0 24 24"><path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7zm3-1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7zM9 9h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2zm0 4h6a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2z"/></svg></span>
         <span id="appName">Ihre Anwendung</span>
       </div>
       <h1 id="headline">Kommt bald.</h1>
@@ -112,7 +55,7 @@
 
   <script>
     (function(){
-      // Texte
+      // --- Texte ---
       const translations = {
         de: {
           appName: "Ihre Anwendung",
@@ -123,9 +66,9 @@
           statusText: "Vorbereitung des Launches",
           updateLabel: "Letzte Aktualisierung:",
           footer: "Platzhalterseite. Alle Rechte vorbehalten.",
+          mailSubject: "Frage zur Anwendung",
           themeLight: "🌞 Light",
-          themeDark: "🌙 Dark",
-          mailSubject: "Frage zur Anwendung"
+          themeDark: "🌙 Dark"
         },
         en: {
           appName: "Your Application",
@@ -136,59 +79,64 @@
           statusText: "Preparing the launch",
           updateLabel: "Last update:",
           footer: "Placeholder page. All rights reserved.",
+          mailSubject: "Question about the application",
           themeLight: "🌞 Light",
-          themeDark: "🌙 Dark",
-          mailSubject: "Question about the application"
+          themeDark: "🌙 Dark"
         }
       };
       const SUP = Object.keys(translations);
       const getLocale = l => (l === "de" ? "de-DE" : "en-US");
+      const base = s => (s || "").toLowerCase().split(/[-_]/)[0];
 
-      // ---- Sprachdetektion ----
-      function findSearchEl(docLike) {
-        try { return docLike && docLike.querySelector && docLike.querySelector('input[type="search"]'); }
-        catch(e){ return null; }
+      // --- Quellen ---
+      function langFromHtml(doc){
+        try {
+          const a = doc?.documentElement?.getAttribute("lang") || doc?.documentElement?.getAttribute("xml:lang");
+          const b = base(a);
+          return SUP.includes(b) ? b : null;
+        } catch(e){ return null; }
       }
-      function readAttrs(el){
-        return [
-          el?.getAttribute('aria-label') || '',
-          el?.getAttribute('title') || '',
-          el?.getAttribute('placeholder') || ''
-        ].join(' ').toLowerCase();
-      }
-      function detectFromSearchField(){
-        // 1) in eigenem Dokument
-        let el = findSearchEl(document);
-        // 2) optional in parent / top (falls Same-Origin)
-        if(!el){ el = findSearchEl(window.parent?.document); }
-        if(!el){ el = findSearchEl(window.top?.document); }
-        if(!el) return null;
-
-        const attrs = readAttrs(el);
-        if (/\bsuchen\b/.test(attrs)) return "de";
-        if (/\bsearch\b/.test(attrs)) return "en";
-        return null;
-      }
-      function detectFromUrl(){
-        const p = new URLSearchParams(location.search);
-        let raw = p.get('sap-language') || p.get('lang') || p.get('locale') || p.get('language');
-        if (!raw && location.hash) {
-          const hp = new URLSearchParams(location.hash.slice(1));
-          raw = hp.get('sap-language');
+      function langFromUrl(){
+        const q = new URLSearchParams(location.search);
+        let raw = q.get("sap-language") || q.get("lang") || q.get("locale") || q.get("language");
+        if (!raw && location.hash){
+          const hq = new URLSearchParams(location.hash.slice(1));
+          raw = hq.get("sap-language");
         }
-        const base = (raw || '').toLowerCase().split(/[-_]/)[0];
-        return SUP.includes(base) ? base : null;
+        const b = base(raw); return SUP.includes(b) ? b : null;
       }
-      function detectFromBrowser(){
-        const base = (navigator.language || '').toLowerCase().split(/[-_]/)[0];
-        return SUP.includes(base) ? base : null;
+      function langFromSearchField(doc){
+        try{
+          const el = doc?.querySelector?.('input[type="search"]');
+          if(!el) return null;
+          const attrs = [el.getAttribute('aria-label')||'', el.getAttribute('title')||'', el.getAttribute('placeholder')||''].join(' ').toLowerCase();
+          if (/\bsuchen\b/.test(attrs)) return "de";
+          if (/\bsearch\b/.test(attrs)) return "en";
+          return null;
+        }catch(e){ return null; }
       }
-      function detectLanguage(){
-        return detectFromSearchField() || detectFromUrl() || detectFromBrowser() || "de";
+      function langFromBrowser(){
+        const b = base(navigator.language || (navigator.languages && navigator.languages[0]));
+        return SUP.includes(b) ? b : null;
       }
 
-      // ---- UI anwenden ----
-      function setLanguage(lang){
+      // --- Erkennung in Priorität ---
+      function detectLangOnce(){
+        return (
+          langFromHtml(window.top?.document) ||
+          langFromHtml(window.parent?.document) ||
+          langFromHtml(document) ||
+          langFromUrl() ||
+          langFromSearchField(window.top?.document) ||
+          langFromSearchField(window.parent?.document) ||
+          langFromSearchField(document) ||
+          langFromBrowser() ||
+          "de"
+        );
+      }
+
+      // --- Anwenden ---
+      function applyLang(lang){
         const t = translations[lang];
         document.getElementById('appName').textContent = t.appName;
         document.getElementById('headline').textContent = t.headline;
@@ -199,19 +147,19 @@
         document.getElementById('updateLabel').textContent = t.updateLabel;
         document.getElementById('footerText').textContent = t.footer;
 
-        // Datum und Mail-Subject
         const d = new Date();
         document.getElementById('date').textContent =
           d.toLocaleDateString(getLocale(lang), { year:'numeric', month:'long', day:'2-digit' });
 
+        // Mail-Betreff
         const mail = new URL(document.getElementById('supportBtn').href);
         mail.searchParams.set('subject', encodeURIComponent(t.mailSubject));
         document.getElementById('supportBtn').href = mail.toString();
 
-        // Sprache am <html> setzen (A11y)
+        // A11y
         document.documentElement.setAttribute('lang', lang);
 
-        // Theme-Button-Text aktualisieren
+        // Theme-Label
         updateThemeToggle(document.documentElement.getAttribute('data-theme') || 'light', lang);
       }
 
@@ -222,17 +170,15 @@
         btn.textContent = isDark ? translations[lang].themeDark : translations[lang].themeLight;
       }
 
-      // ---- Init ----
+      // --- Init ---
       const savedTheme = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
 
-      let currentLang = detectLanguage();
-      setLanguage(currentLang);
+      let currentLang = detectLangOnce();
+      applyLang(currentLang);
 
       document.getElementById('year').textContent = new Date().getFullYear();
-
-      // Theme Toggle
-      document.getElementById('themeToggle').addEventListener('click', function(){
+      document.getElementById('themeToggle').addEventListener('click', () => {
         const cur = document.documentElement.getAttribute('data-theme') || 'light';
         const next = cur === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', next);
@@ -240,45 +186,53 @@
         updateThemeToggle(next, currentLang);
       });
 
-      // ---- Reagieren, wenn Work Zone später das Suchfeld rendert/ändert ----
-      const debounced = (fn, ms=120) => { let to; return (...a)=>{ clearTimeout(to); to=setTimeout(()=>fn(...a), ms); }; };
-      const recheck = debounced(() => {
-        const detected = detectFromSearchField();
-        if (detected && detected !== currentLang) {
-          currentLang = detected;
-          setLanguage(currentLang);
-        }
-      });
-
-      // Beobachte DOM (eigenes Dokument)
-      const mo = new MutationObserver(muts => {
-        for (const m of muts) {
-          if (m.type === 'childList' || (m.type === 'attributes' && m.target?.matches?.('input[type="search"]'))) {
-            recheck(); break;
+      // --- Live: Beobachte eigenes <html lang> ---
+      const moSelf = new MutationObserver(muts => {
+        muts.forEach(m => {
+          if (m.type === 'attributes' && m.attributeName === 'lang') {
+            const newLang = base(document.documentElement.getAttribute('lang'));
+            if (newLang && SUP.includes(newLang) && newLang !== currentLang){
+              currentLang = newLang; applyLang(currentLang);
+            }
           }
-        }
+        });
       });
-      mo.observe(document.documentElement, { subtree:true, childList:true, attributes:true });
+      moSelf.observe(document.documentElement, { attributes:true });
 
-      // Versuch: in parent/top beobachten (nur wenn Same-Origin)
-      try {
-        const parentDoc = window.parent?.document;
-        if (parentDoc && parentDoc !== document) {
-          const moP = new MutationObserver(() => recheck());
-          moP.observe(parentDoc, { subtree:true, childList:true, attributes:true });
-        }
-      } catch(e) { /* Cross-Origin: ignorieren */ }
+      // --- Live: Beobachte parent/top <html lang> (Same-Origin) oder Polling als Fallback ---
+      function watchExternalDoc(doc){
+        try{
+          if (!doc || doc === document) return;
+          const target = doc.documentElement;
+          const mo = new MutationObserver(() => {
+            const l = base(target.getAttribute('lang'));
+            if (l && SUP.includes(l) && l !== currentLang){ currentLang = l; applyLang(currentLang); }
+          });
+          mo.observe(target, { attributes:true, attributeFilter:['lang'] });
+        }catch(e){ /* möglicherweise Cross-Origin */ }
+      }
+      watchExternalDoc(window.parent?.document);
+      watchExternalDoc(window.top?.document);
 
-      // Sicherheits-Poll, falls das Feld sehr spät kommt
-      let tries = 0;
+      // Cross-Origin-Fallback: Polling (leichtgewichtig, stoppt bei Erfolg)
+      let lastPolled = currentLang;
       const poll = setInterval(() => {
-        tries++;
-        const lang = detectFromSearchField();
-        if (lang && lang !== currentLang) {
-          currentLang = lang; setLanguage(currentLang);
+        let extLang = null;
+        try { extLang = base(window.top?.document?.documentElement?.getAttribute('lang')); } catch(e){}
+        if (!extLang) { try { extLang = base(window.parent?.document?.documentElement?.getAttribute('lang')); } catch(e){} }
+        if (extLang && SUP.includes(extLang) && extLang !== lastPolled){
+          lastPolled = extLang; currentLang = extLang; applyLang(currentLang);
         }
-        if (lang || tries > 30) clearInterval(poll); // max ~15s
-      }, 500);
+      }, 1500);
+      // optional: nach 2 Minuten stoppen
+      setTimeout(() => clearInterval(poll), 120000);
+
+      // Zusatz: falls das Suchfeld später gerendert wird (nur Heuristik)
+      const moBody = new MutationObserver(() => {
+        const l = langFromSearchField(document) || langFromSearchField(window.parent?.document) || langFromSearchField(window.top?.document);
+        if (l && l !== currentLang){ currentLang = l; applyLang(currentLang); }
+      });
+      moBody.observe(document.body, { subtree:true, childList:true, attributes:true });
     })();
   </script>
 </body>
