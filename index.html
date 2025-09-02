@@ -86,47 +86,20 @@
       };
       const SUP = Object.keys(translations);
       const getLocale = l => (l === "de" ? "de-DE" : "en-US");
-      const base = s => (s || "").toLowerCase().split(/[-_]/)[0];
 
-      // --- Quellen ---
-      function langFromHtml(doc){
-        try {
-          const a = doc?.documentElement?.getAttribute("lang") || doc?.documentElement?.getAttribute("xml:lang");
-          const b = base(a);
-          return SUP.includes(b) ? b : null;
-        } catch(e){ return null; }
-      }
-      function langFromUrl(){
-        const q = new URLSearchParams(location.search);
-        let raw = q.get("sap-language") || q.get("lang") || q.get("locale") || q.get("language");
-        if (!raw && location.hash){
-          const hq = new URLSearchParams(location.hash.slice(1));
-          raw = hq.get("sap-language");
-        }
-        const b = base(raw); return SUP.includes(b) ? b : null;
-      }
-      function langFromSearchField(doc){
-        try{
-          const el = doc?.querySelector?.('input[type="search"]');
-          if(!el) return null;
-          const attrs = [el.getAttribute('aria-label')||'', el.getAttribute('title')||'', el.getAttribute('placeholder')||''].join(' ').toLowerCase();
-          if (/\bsuchen\b/.test(attrs)) return "de";
-          if (/\bsearch\b/.test(attrs)) return "en";
-          return null;
-        }catch(e){ return null; }
-      }
-      function langFromBrowser(){
-        const b = base(navigator.language || (navigator.languages && navigator.languages[0]));
-        return SUP.includes(b) ? b : null;
+      // --- Quick & simple: Sprache ausschließlich aus dem Suchfeld in DIESER Seite ableiten ---
+      function detectLangFromSearch(){
+        const el = document.querySelector('#PlaceHolderSearchField input[type="search"].sapMSFI');
+        if (!el) return null;
+        const p = (el.getAttribute('placeholder') || '').trim().toLowerCase();
+        if (p === 'suchen') return 'de';
+        if (p === 'search') return 'en';
+        return null; // keine eindeutige Erkennung
       }
 
-      // --- Erkennung in Priorität ---
-      function detectLangOnce() {
-  const searchInput = document.querySelector("#PlaceHolderSearchField input[type='search'].sapMSFI");
-  const placeholderText = searchInput ? searchInput.placeholder : "";
-  const currentLang = (placeholderText === "Suchen") ? "de" : "en";
-  return currentLang;
-}
+      function detectLangOnce(){
+        return detectLangFromSearch() || 'en';
+      }
 
       // --- Anwenden ---
       function applyLang(lang){
@@ -140,19 +113,21 @@
         document.getElementById('updateLabel').textContent = t.updateLabel;
         document.getElementById('footerText').textContent = t.footer;
 
+        // Datum in passender Locale
         const d = new Date();
         document.getElementById('date').textContent =
           d.toLocaleDateString(getLocale(lang), { year:'numeric', month:'long', day:'2-digit' });
 
-        // Mail-Betreff
-        const mail = new URL(document.getElementById('supportBtn').href);
-        mail.searchParams.set('subject', encodeURIComponent(t.mailSubject));
-        document.getElementById('supportBtn').href = mail.toString();
+        // Mail-Betreff (sicher & ohne Doppel-Encoding)
+        const support = document.getElementById('supportBtn');
+        const rawHref = support.getAttribute('href') || '';
+        const to = rawHref.split('?')[0];
+        support.setAttribute('href', `${to}?subject=${encodeURIComponent(t.mailSubject)}`);
 
         // A11y
         document.documentElement.setAttribute('lang', lang);
 
-        // Theme-Label
+        // Theme-Label aktualisieren
         updateThemeToggle(document.documentElement.getAttribute('data-theme') || 'light', lang);
       }
 
@@ -179,53 +154,31 @@
         updateThemeToggle(next, currentLang);
       });
 
-      // --- Live: Beobachte eigenes <html lang> ---
+      // --- Live: Beobachte eigenes <html lang> (nur diese Seite) ---
       const moSelf = new MutationObserver(muts => {
-        muts.forEach(m => {
+        for (const m of muts) {
           if (m.type === 'attributes' && m.attributeName === 'lang') {
-            const newLang = base(document.documentElement.getAttribute('lang'));
-            if (newLang && SUP.includes(newLang) && newLang !== currentLang){
-              currentLang = newLang; applyLang(currentLang);
+            const newLang = document.documentElement.getAttribute('lang');
+            if (SUP.includes(newLang) && newLang !== currentLang){
+              currentLang = newLang; 
+              applyLang(currentLang);
             }
           }
-        });
-      });
-      moSelf.observe(document.documentElement, { attributes:true });
-
-      // --- Live: Beobachte parent/top <html lang> (Same-Origin) oder Polling als Fallback ---
-      function watchExternalDoc(doc){
-        try{
-          if (!doc || doc === document) return;
-          const target = doc.documentElement;
-          const mo = new MutationObserver(() => {
-            const l = base(target.getAttribute('lang'));
-            if (l && SUP.includes(l) && l !== currentLang){ currentLang = l; applyLang(currentLang); }
-          });
-          mo.observe(target, { attributes:true, attributeFilter:['lang'] });
-        }catch(e){ /* möglicherweise Cross-Origin */ }
-      }
-      watchExternalDoc(window.parent?.document);
-      watchExternalDoc(window.top?.document);
-
-      // Cross-Origin-Fallback: Polling (leichtgewichtig, stoppt bei Erfolg)
-      let lastPolled = currentLang;
-      const poll = setInterval(() => {
-        let extLang = null;
-        try { extLang = base(window.top?.document?.documentElement?.getAttribute('lang')); } catch(e){}
-        if (!extLang) { try { extLang = base(window.parent?.document?.documentElement?.getAttribute('lang')); } catch(e){} }
-        if (extLang && SUP.includes(extLang) && extLang !== lastPolled){
-          lastPolled = extLang; currentLang = extLang; applyLang(currentLang);
         }
-      }, 1500);
-      // optional: nach 2 Minuten stoppen
-      setTimeout(() => clearInterval(poll), 120000);
-
-      // Zusatz: falls das Suchfeld später gerendert wird (nur Heuristik)
-      const moBody = new MutationObserver(() => {
-        const l = langFromSearchField(document) || langFromSearchField(window.parent?.document) || langFromSearchField(window.top?.document);
-        if (l && l !== currentLang){ currentLang = l; applyLang(currentLang); }
       });
-      moBody.observe(document.body, { subtree:true, childList:true, attributes:true });
+      moSelf.observe(document.documentElement, { attributes:true, attributeFilter:['lang'] });
+
+      // --- Live: Beobachte Platzhalter-Änderungen am Suchfeld innerhalb DIESER Seite ---
+      const moSearch = new MutationObserver(() => {
+        const l = detectLangFromSearch();
+        if (l && l !== currentLang){
+          currentLang = l; 
+          applyLang(currentLang);
+        }
+      });
+      moSearch.observe(document.body, { subtree:true, childList:true, attributes:true, attributeFilter:['placeholder'] });
+
+      // Hinweis: Keine Zugriffe auf window.parent / window.top mehr -> keine Same-Origin-Probleme.
     })();
   </script>
 </body>
