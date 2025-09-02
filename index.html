@@ -121,19 +121,12 @@
       }
 
       // --- Erkennung in Priorität ---
-      function detectLangOnce(){
-        return (
-          langFromHtml(window.top?.document) ||
-          langFromHtml(window.parent?.document) ||
-          langFromHtml(document) ||
-          langFromUrl() ||
-          langFromSearchField(window.top?.document) ||
-          langFromSearchField(window.parent?.document) ||
-          langFromSearchField(document) ||
-          langFromBrowser() ||
-          "de"
-        );
-      }
+      function detectLangOnce() {
+  const searchInput = document.querySelector("#PlaceHolderSearchField input[type='search'].sapMSFI");
+  const placeholderText = searchInput ? searchInput.placeholder : "";
+  const currentLang = (placeholderText === "Suchen") ? "de" : "en";
+  return currentLang;
+}
 
       // --- Anwenden ---
       function applyLang(lang){
