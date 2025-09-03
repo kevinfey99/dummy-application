@@ -89,7 +89,7 @@
 
       // --- Quick & simple: Sprache ausschließlich aus dem Suchfeld in DIESER Seite ableiten ---
       function detectLangFromSearch(){
-        const el = document.querySelector('#PlaceHolderSearchField input[type="search"].sapMSFI');
+        const el = document.documentElement.getAttribute("lang");
         if (!el) return null;
         const p = (el.getAttribute('placeholder') || '').trim().toLowerCase();
         if (p === 'suchen') return 'de';
