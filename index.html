@@ -88,7 +88,7 @@
       const getLocale = l => (l === "de" ? "de-DE" : "en-US");
 
       function detectLang(){
-        const el = document.documentElement.getAttribute("lang")||'en';
+        const el = new URL(window.location.href).searchParams.get("sap-locale")||'en';
         return el; 
       }
 
