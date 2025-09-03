@@ -87,18 +87,9 @@
       const SUP = Object.keys(translations);
       const getLocale = l => (l === "de" ? "de-DE" : "en-US");
 
-      // --- Quick & simple: Sprache ausschließlich aus dem Suchfeld in DIESER Seite ableiten ---
-      function detectLangFromSearch(){
-        const el = document.documentElement.getAttribute("lang");
-        if (!el) return null;
-        const p = (el.getAttribute('placeholder') || '').trim().toLowerCase();
-        if (p === 'suchen') return 'de';
-        if (p === 'search') return 'en';
-        return null; // keine eindeutige Erkennung
-      }
-
-      function detectLangOnce(){
-        return detectLangFromSearch() || 'en';
+      function detectLang(){
+        const el = document.documentElement.getAttribute("lang")||'en';
+        return el; 
       }
 
       // --- Anwenden ---
@@ -142,7 +133,7 @@
       const savedTheme = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
 
-      let currentLang = detectLangOnce();
+      let currentLang = detectLang();
       applyLang(currentLang);
 
       document.getElementById('year').textContent = new Date().getFullYear();
@@ -170,7 +161,7 @@
 
       // --- Live: Beobachte Platzhalter-Änderungen am Suchfeld innerhalb DIESER Seite ---
       const moSearch = new MutationObserver(() => {
-        const l = detectLangFromSearch();
+        const l = detectLang();
         if (l && l !== currentLang){
           currentLang = l; 
           applyLang(currentLang);
